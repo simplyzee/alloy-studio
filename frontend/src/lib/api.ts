@@ -34,7 +34,7 @@ export const api = {
 
     if (USE_STATIC_DATA) {
       // Fetch from static JSON file
-      const response = await fetch('/alloy-ui/data/components.json');
+      const response = await fetch('/alloy-studio/data/components.json');
       if (!response.ok) {
         throw new Error('Failed to fetch components');
       }
@@ -88,7 +88,7 @@ export const api = {
 
     if (USE_STATIC_DATA) {
       // Fetch from static JSON file
-      const response = await fetch('/alloy-ui/data/recipes.json');
+      const response = await fetch('/alloy-studio/data/recipes.json');
       if (!response.ok) {
         throw new Error('Failed to fetch recipes');
       }
