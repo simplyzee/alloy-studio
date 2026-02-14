@@ -1,0 +1,3087 @@
+{
+  "components": [
+    {
+      "id": "beyla.ebpf",
+      "category": "beyla",
+      "name": "ebpf",
+      "displayName": "Beyla eBPF",
+      "description": "Automatically instruments HTTP and HTTPS services using eBPF to collect traces, metrics, and logs without code changes",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "traces",
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/beyla/beyla.ebpf/",
+      "examples": [
+        {
+          "title": "Basic eBPF instrumentation",
+          "description": "Automatically instrument all HTTP services running on the host",
+          "code": "beyla.ebpf \"default\" {\n  output {\n    traces = [otelcol.exporter.otlp.default.input]\n    metrics = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "database_observability.mysql",
+      "category": "database_observability",
+      "name": "mysql",
+      "displayName": "MySQL Database Observability",
+      "description": "Collects MySQL database metrics and query performance data for database observability",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/database_observability/database_observability.mysql/",
+      "examples": [
+        {
+          "title": "Monitor MySQL database",
+          "description": "Collect MySQL metrics and slow query logs",
+          "code": "database_observability.mysql \"default\" {\n  connection_string = \"root:password@tcp(localhost:3306)/\"\n  \n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "database_observability.postgres",
+      "category": "database_observability",
+      "name": "postgres",
+      "displayName": "PostgreSQL Database Observability",
+      "description": "Collects PostgreSQL database metrics and query performance data for database observability",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/database_observability/database_observability.postgres/",
+      "examples": [
+        {
+          "title": "Monitor PostgreSQL database",
+          "description": "Collect PostgreSQL metrics and slow query logs",
+          "code": "database_observability.postgres \"default\" {\n  connection_string = \"postgresql://user:password@localhost:5432/postgres\"\n  \n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.azure",
+      "category": "discovery",
+      "name": "azure",
+      "displayName": "Azure Discovery",
+      "description": "Discovers scrape targets from Azure Virtual Machines",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.azure/",
+      "examples": [
+        {
+          "title": "Discover Azure VMs",
+          "description": "Discover all VMs in an Azure subscription for monitoring",
+          "code": "discovery.azure \"vms\" {\n  subscription_id = \"00000000-0000-0000-0000-000000000000\"\n  refresh_interval = \"5m\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.consul",
+      "category": "discovery",
+      "name": "consul",
+      "displayName": "Consul Discovery",
+      "description": "Discovers scrape targets from Consul services",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.consul/",
+      "examples": [
+        {
+          "title": "Discover Consul services",
+          "description": "Discover all services registered in Consul catalog",
+          "code": "discovery.consul \"services\" {\n  server = \"localhost:8500\"\n  datacenter = \"dc1\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.consulagent",
+      "category": "discovery",
+      "name": "consulagent",
+      "displayName": "Consul Agent Discovery",
+      "description": "Discovers scrape targets from Consul agent services",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.consulagent/",
+      "examples": [
+        {
+          "title": "Discover local Consul agent services",
+          "description": "Discover services from the local Consul agent",
+          "code": "discovery.consulagent \"local\" {\n  server = \"localhost:8500\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.digitalocean",
+      "category": "discovery",
+      "name": "digitalocean",
+      "displayName": "DigitalOcean Discovery",
+      "description": "Discovers scrape targets from DigitalOcean droplets",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.digitalocean/",
+      "examples": [
+        {
+          "title": "Discover DigitalOcean droplets",
+          "description": "Discover all droplets in a DigitalOcean account",
+          "code": "discovery.digitalocean \"droplets\" {\n  bearer_token = env(\"DIGITALOCEAN_TOKEN\")\n  refresh_interval = \"5m\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.dns",
+      "category": "discovery",
+      "name": "dns",
+      "displayName": "DNS Discovery",
+      "description": "Discovers scrape targets from DNS SRV records",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.dns/",
+      "examples": [
+        {
+          "title": "Discover services via DNS SRV",
+          "description": "Discover services using DNS SRV records",
+          "code": "discovery.dns \"services\" {\n  names = [\"_prometheus._tcp.example.com\"]\n  refresh_interval = \"30s\"\n  type = \"SRV\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.docker",
+      "category": "discovery",
+      "name": "docker",
+      "displayName": "Docker Discovery",
+      "description": "Discovers scrape targets from Docker Engine containers",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.docker/",
+      "examples": [
+        {
+          "title": "Discover Docker containers",
+          "description": "Discover all running Docker containers on the local host",
+          "code": "discovery.docker \"containers\" {\n  host = \"unix:///var/run/docker.sock\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.dockerswarm",
+      "category": "discovery",
+      "name": "dockerswarm",
+      "displayName": "Docker Swarm Discovery",
+      "description": "Discovers scrape targets from Docker Swarm services",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.dockerswarm/",
+      "examples": [
+        {
+          "title": "Discover Docker Swarm services",
+          "description": "Discover services running in Docker Swarm cluster",
+          "code": "discovery.dockerswarm \"services\" {\n  host = \"unix:///var/run/docker.sock\"\n  role = \"services\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.ec2",
+      "category": "discovery",
+      "name": "ec2",
+      "displayName": "AWS EC2 Discovery",
+      "description": "Discovers scrape targets from AWS EC2 instances",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.ec2/",
+      "examples": [
+        {
+          "title": "Discover AWS EC2 instances",
+          "description": "Discover EC2 instances in a specific AWS region",
+          "code": "discovery.ec2 \"instances\" {\n  region = \"us-east-1\"\n  refresh_interval = \"5m\"\n  port = 9100\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.eureka",
+      "category": "discovery",
+      "name": "eureka",
+      "displayName": "Eureka Discovery",
+      "description": "Discovers scrape targets from Netflix Eureka service registry",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.eureka/",
+      "examples": [
+        {
+          "title": "Discover Eureka services",
+          "description": "Discover services from Netflix Eureka registry",
+          "code": "discovery.eureka \"services\" {\n  server = \"http://eureka.example.com:8761/eureka\"\n  refresh_interval = \"30s\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.file",
+      "category": "discovery",
+      "name": "file",
+      "displayName": "File Discovery",
+      "description": "Discovers scrape targets from file-based service discovery",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.file/",
+      "examples": [
+        {
+          "title": "Discover targets from JSON files",
+          "description": "Read scrape targets from JSON or YAML files",
+          "code": "discovery.file \"targets\" {\n  files = [\"/etc/alloy/targets/*.json\"]\n  refresh_interval = \"5m\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.gce",
+      "category": "discovery",
+      "name": "gce",
+      "displayName": "GCE Discovery",
+      "description": "Discovers scrape targets from Google Compute Engine instances",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.gce/",
+      "examples": [
+        {
+          "title": "Discover GCE instances",
+          "description": "Discover Google Compute Engine instances in a project",
+          "code": "discovery.gce \"instances\" {\n  project = \"my-project\"\n  zone = \"us-central1-a\"\n  refresh_interval = \"5m\"\n  port = 9100\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.hetzner",
+      "category": "discovery",
+      "name": "hetzner",
+      "displayName": "Hetzner Discovery",
+      "description": "Discovers scrape targets from Hetzner Cloud servers",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.hetzner/",
+      "examples": [
+        {
+          "title": "Discover Hetzner Cloud servers",
+          "description": "Discover servers in Hetzner Cloud",
+          "code": "discovery.hetzner \"servers\" {\n  role = \"hcloud\"\n  bearer_token = env(\"HETZNER_TOKEN\")\n  refresh_interval = \"5m\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.http",
+      "category": "discovery",
+      "name": "http",
+      "displayName": "HTTP Discovery",
+      "description": "Discovers scrape targets from HTTP endpoints",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.http/",
+      "examples": [
+        {
+          "title": "Discover targets from HTTP API",
+          "description": "Fetch scrape targets from an HTTP endpoint returning JSON",
+          "code": "discovery.http \"api\" {\n  url = \"https://example.com/targets\"\n  refresh_interval = \"1m\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.ionos",
+      "category": "discovery",
+      "name": "ionos",
+      "displayName": "IONOS Discovery",
+      "description": "Discovers scrape targets from IONOS Cloud servers",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.ionos/",
+      "examples": [
+        {
+          "title": "Discover IONOS Cloud servers",
+          "description": "Discover servers in IONOS Cloud datacenter",
+          "code": "discovery.ionos \"servers\" {\n  datacenter_id = \"dc-1\"\n  bearer_token = env(\"IONOS_TOKEN\")\n  refresh_interval = \"5m\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.kubelet",
+      "category": "discovery",
+      "name": "kubelet",
+      "displayName": "Kubelet Discovery",
+      "description": "Discovers scrape targets from Kubernetes kubelet metrics",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.kubelet/",
+      "examples": [
+        {
+          "title": "Discover kubelet metrics endpoints",
+          "description": "Discover kubelet metrics and cAdvisor endpoints",
+          "code": "discovery.kubelet \"kubelets\" {\n  bearer_token_file = \"/var/run/secrets/kubernetes.io/serviceaccount/token\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.kubernetes",
+      "category": "discovery",
+      "name": "kubernetes",
+      "displayName": "Kubernetes Discovery",
+      "description": "Discovers scrape targets from Kubernetes API",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.kubernetes/",
+      "examples": [
+        {
+          "title": "Discover Kubernetes pods",
+          "description": "Discover all pods in a Kubernetes cluster",
+          "code": "discovery.kubernetes \"pods\" {\n  role = \"pod\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.kuma",
+      "category": "discovery",
+      "name": "kuma",
+      "displayName": "Kuma Discovery",
+      "description": "Discovers scrape targets from Kuma service mesh",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.kuma/",
+      "examples": [
+        {
+          "title": "Discover Kuma mesh services",
+          "description": "Discover services in Kuma service mesh",
+          "code": "discovery.kuma \"mesh\" {\n  server = \"http://kuma-control-plane.kuma-system:5676\"\n  refresh_interval = \"30s\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.lightsail",
+      "category": "discovery",
+      "name": "lightsail",
+      "displayName": "AWS Lightsail Discovery",
+      "description": "Discovers scrape targets from AWS Lightsail instances",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.lightsail/",
+      "examples": [
+        {
+          "title": "Discover AWS Lightsail instances",
+          "description": "Discover Lightsail instances in a region",
+          "code": "discovery.lightsail \"instances\" {\n  region = \"us-east-1\"\n  refresh_interval = \"5m\"\n  port = 9100\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.linode",
+      "category": "discovery",
+      "name": "linode",
+      "displayName": "Linode Discovery",
+      "description": "Discovers scrape targets from Linode instances",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.linode/",
+      "examples": [
+        {
+          "title": "Discover Linode instances",
+          "description": "Discover all Linode instances in account",
+          "code": "discovery.linode \"instances\" {\n  bearer_token = env(\"LINODE_TOKEN\")\n  refresh_interval = \"5m\"\n  port = 9100\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.marathon",
+      "category": "discovery",
+      "name": "marathon",
+      "displayName": "Marathon Discovery",
+      "description": "Discovers scrape targets from Apache Mesos Marathon",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.marathon/",
+      "examples": [
+        {
+          "title": "Discover Marathon applications",
+          "description": "Discover apps running on Apache Mesos Marathon",
+          "code": "discovery.marathon \"apps\" {\n  servers = [\"http://marathon.mesos:8080\"]\n  refresh_interval = \"30s\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.nerve",
+      "category": "discovery",
+      "name": "nerve",
+      "displayName": "Nerve Discovery",
+      "description": "Discovers scrape targets from Airbnb Nerve service registry",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.nerve/",
+      "examples": [
+        {
+          "title": "Discover Nerve services",
+          "description": "Discover services from Airbnb Nerve service registry",
+          "code": "discovery.nerve \"services\" {\n  servers = [\"zk1:2181\", \"zk2:2181\"]\n  paths = [\"/monitoring/nerve\"]\n  timeout = \"10s\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.nomad",
+      "category": "discovery",
+      "name": "nomad",
+      "displayName": "Nomad Discovery",
+      "description": "Discovers scrape targets from HashiCorp Nomad services",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.nomad/",
+      "examples": [
+        {
+          "title": "Discover Nomad services",
+          "description": "Discover services from HashiCorp Nomad",
+          "code": "discovery.nomad \"services\" {\n  server = \"http://localhost:4646\"\n  region = \"global\"\n  refresh_interval = \"30s\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.openstack",
+      "category": "discovery",
+      "name": "openstack",
+      "displayName": "OpenStack Discovery",
+      "description": "Discovers scrape targets from OpenStack instances",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.openstack/",
+      "examples": [
+        {
+          "title": "Discover OpenStack instances",
+          "description": "Discover instances in OpenStack cloud",
+          "code": "discovery.openstack \"instances\" {\n  role = \"instance\"\n  region = \"RegionOne\"\n  identity_endpoint = \"https://openstack.example.com:5000/v3\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.ovhcloud",
+      "category": "discovery",
+      "name": "ovhcloud",
+      "displayName": "OVHcloud Discovery",
+      "description": "Discovers scrape targets from OVHcloud servers",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.ovhcloud/",
+      "examples": [
+        {
+          "title": "Discover OVHcloud servers",
+          "description": "Discover dedicated servers in OVHcloud",
+          "code": "discovery.ovhcloud \"servers\" {\n  service = \"dedicated_server\"\n  application_key = env(\"OVH_APPLICATION_KEY\")\n  application_secret = env(\"OVH_APPLICATION_SECRET\")\n  consumer_key = env(\"OVH_CONSUMER_KEY\")\n  refresh_interval = \"5m\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.process",
+      "category": "discovery",
+      "name": "process",
+      "displayName": "Process Discovery",
+      "description": "Discovers scrape targets from running processes on the host",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.process/",
+      "examples": [
+        {
+          "title": "Discover running processes",
+          "description": "Discover processes by name pattern on the host",
+          "code": "discovery.process \"java_apps\" {\n  discover_config {\n    cwd = \"/\"\n    exe = \".*java.*\"\n  }\n  refresh_interval = \"1m\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.puppetdb",
+      "category": "discovery",
+      "name": "puppetdb",
+      "displayName": "PuppetDB Discovery",
+      "description": "Discovers scrape targets from PuppetDB resources",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.puppetdb/",
+      "examples": [
+        {
+          "title": "Discover PuppetDB resources",
+          "description": "Discover resources from PuppetDB",
+          "code": "discovery.puppetdb \"nodes\" {\n  url = \"https://puppetdb.example.com\"\n  query = \"nodes { }\"\n  refresh_interval = \"1m\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.relabel",
+      "category": "discovery",
+      "name": "relabel",
+      "displayName": "Relabel Discovery",
+      "description": "Applies relabeling rules to discovered targets",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.relabel/",
+      "examples": [
+        {
+          "title": "Relabel discovered targets",
+          "description": "Apply relabeling rules to modify target labels",
+          "code": "discovery.relabel \"modify\" {\n  targets = discovery.kubernetes.pods.targets\n  \n  rule {\n    source_labels = [\"__meta_kubernetes_pod_label_app\"]\n    target_label = \"app\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.scaleway",
+      "category": "discovery",
+      "name": "scaleway",
+      "displayName": "Scaleway Discovery",
+      "description": "Discovers scrape targets from Scaleway instances",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.scaleway/",
+      "examples": [
+        {
+          "title": "Discover Scaleway instances",
+          "description": "Discover instances in Scaleway cloud",
+          "code": "discovery.scaleway \"instances\" {\n  role = \"instance\"\n  project_id = \"00000000-0000-0000-0000-000000000000\"\n  secret_key = env(\"SCALEWAY_SECRET_KEY\")\n  zone = \"fr-par-1\"\n  refresh_interval = \"5m\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.serverset",
+      "category": "discovery",
+      "name": "serverset",
+      "displayName": "Serverset Discovery",
+      "description": "Discovers scrape targets from Twitter Serverset/Finagle registry",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.serverset/",
+      "examples": [
+        {
+          "title": "Discover Serverset services",
+          "description": "Discover services from Twitter Serverset/Finagle registry",
+          "code": "discovery.serverset \"services\" {\n  servers = [\"zk1:2181\", \"zk2:2181\"]\n  paths = [\"/twitter/service/role/prod\"]\n  timeout = \"10s\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.triton",
+      "category": "discovery",
+      "name": "triton",
+      "displayName": "Triton Discovery",
+      "description": "Discovers scrape targets from Joyent Triton containers",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.triton/",
+      "examples": [
+        {
+          "title": "Discover Triton containers",
+          "description": "Discover containers in Joyent Triton",
+          "code": "discovery.triton \"containers\" {\n  account = \"example\"\n  dns_suffix = \"triton.zone\"\n  endpoint = \"https://us-east-1.api.joyent.com\"\n  role = \"container\"\n  refresh_interval = \"1m\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "discovery.uyuni",
+      "category": "discovery",
+      "name": "uyuni",
+      "displayName": "Uyuni Discovery",
+      "description": "Discovers scrape targets from SUSE Uyuni managed systems",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/discovery/discovery.uyuni/",
+      "examples": [
+        {
+          "title": "Discover Uyuni managed systems",
+          "description": "Discover systems managed by SUSE Uyuni",
+          "code": "discovery.uyuni \"systems\" {\n  server = \"https://uyuni.example.com\"\n  username = env(\"UYUNI_USER\")\n  password = env(\"UYUNI_PASSWORD\")\n  refresh_interval = \"5m\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "faro.receiver",
+      "category": "faro",
+      "name": "receiver",
+      "displayName": "Faro Receiver",
+      "description": "Receives telemetry data from Grafana Faro Web SDK for real user monitoring",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "logs",
+        "traces",
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/faro/faro.receiver/",
+      "examples": [
+        {
+          "title": "Receive Faro telemetry",
+          "description": "Receive real user monitoring data from Faro Web SDK",
+          "code": "faro.receiver \"frontend\" {\n  server {\n    listen_address = \"0.0.0.0\"\n    listen_port = 12347\n  }\n  \n  output {\n    logs = [loki.write.default.receiver]\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "local.file",
+      "category": "local",
+      "name": "file",
+      "displayName": "Local File",
+      "description": "Reads a file and makes its contents available to other components",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/local/local.file/",
+      "examples": [
+        {
+          "title": "Read configuration from file",
+          "description": "Read a configuration file and expose its content",
+          "code": "local.file \"config\" {\n  filename = \"/etc/alloy/config.yaml\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "local.file_match",
+      "category": "local",
+      "name": "file_match",
+      "displayName": "Local File Match",
+      "description": "Discovers files on the local filesystem using glob patterns",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/local/local.file_match/",
+      "examples": [
+        {
+          "title": "Discover files by pattern",
+          "description": "Find files matching a glob pattern",
+          "code": "local.file_match \"logs\" {\n  path_targets = [{\n    __path__ = \"/var/log/*.log\",\n  }]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.echo",
+      "category": "loki",
+      "name": "echo",
+      "displayName": "Loki Echo",
+      "description": "Receives log entries and echoes them to the process's stdout for debugging",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.echo/",
+      "examples": [
+        {
+          "title": "Echo logs to stdout",
+          "description": "Print received log entries to standard output for debugging",
+          "code": "loki.echo \"debug\" {}\n\nloki.source.file \"logs\" {\n  targets = [{\n    __path__ = \"/var/log/app.log\",\n    job = \"app\",\n  }]\n  forward_to = [loki.echo.debug.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.enrich",
+      "category": "loki",
+      "name": "enrich",
+      "displayName": "Loki Enrich",
+      "description": "Enriches log entries with additional metadata from external sources",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.enrich/",
+      "examples": [
+        {
+          "title": "Enrich logs with metadata",
+          "description": "Add additional metadata to log entries",
+          "code": "loki.enrich \"metadata\" {\n  forward_to = [loki.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.process",
+      "category": "loki",
+      "name": "process",
+      "displayName": "Loki Process",
+      "description": "Transforms log entries using pipeline stages for parsing and enrichment",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.process/",
+      "examples": [
+        {
+          "title": "Parse and transform logs",
+          "description": "Extract fields and transform log entries using pipeline stages",
+          "code": "loki.process \"json_logs\" {\n  forward_to = [loki.write.default.receiver]\n  \n  stage.json {\n    expressions = {\n      level = \"level\",\n      message = \"msg\",\n    }\n  }\n  \n  stage.labels {\n    values = {\n      level = \"\",\n    }\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.relabel",
+      "category": "loki",
+      "name": "relabel",
+      "displayName": "Loki Relabel",
+      "description": "Applies Prometheus-style relabeling rules to log entries",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.relabel/",
+      "examples": [
+        {
+          "title": "Relabel log entries",
+          "description": "Apply relabeling rules to log stream labels",
+          "code": "loki.relabel \"modify\" {\n  forward_to = [loki.write.default.receiver]\n  \n  rule {\n    source_labels = [\"__meta_kubernetes_pod_label_app\"]\n    target_label = \"app\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.rules.kubernetes",
+      "category": "loki",
+      "name": "rules.kubernetes",
+      "displayName": "Loki Kubernetes Rules",
+      "description": "Discovers and syncs Loki recording and alerting rules from Kubernetes resources",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.rules.kubernetes/",
+      "examples": [
+        {
+          "title": "Sync Loki rules from Kubernetes",
+          "description": "Discover and sync Loki recording/alerting rules from Kubernetes resources",
+          "code": "loki.rules.kubernetes \"rules\" {\n  address = \"http://loki:3100\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.secretfilter",
+      "category": "loki",
+      "name": "secretfilter",
+      "displayName": "Loki Secret Filter",
+      "description": "Filters sensitive information from log entries to prevent secret leakage",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.secretfilter/",
+      "examples": [
+        {
+          "title": "Filter secrets from logs",
+          "description": "Redact sensitive information from log entries",
+          "code": "loki.secretfilter \"redact\" {\n  forward_to = [loki.write.default.receiver]\n  \n  types = [\"AWS_ACCESS_KEY_ID\", \"CREDIT_CARD\"]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.api",
+      "category": "loki",
+      "name": "source.api",
+      "displayName": "Loki API Source",
+      "description": "Receives log entries via Loki push API over HTTP",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.api/",
+      "examples": [
+        {
+          "title": "Receive logs via Loki API",
+          "description": "Accept log entries via Loki push API",
+          "code": "loki.source.api \"receiver\" {\n  http {\n    listen_address = \"0.0.0.0\"\n    listen_port = 3100\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.awsfirehose",
+      "category": "loki",
+      "name": "source.awsfirehose",
+      "displayName": "Loki AWS Firehose Source",
+      "description": "Receives log entries from AWS Kinesis Data Firehose",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.awsfirehose/",
+      "examples": [
+        {
+          "title": "Receive logs from AWS Firehose",
+          "description": "Ingest logs from AWS Kinesis Data Firehose",
+          "code": "loki.source.awsfirehose \"firehose\" {\n  http {\n    listen_address = \"0.0.0.0\"\n    listen_port = 8080\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.azure_event_hubs",
+      "category": "loki",
+      "name": "source.azure_event_hubs",
+      "displayName": "Loki Azure Event Hubs Source",
+      "description": "Receives log entries from Azure Event Hubs",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.azure_event_hubs/",
+      "examples": [
+        {
+          "title": "Receive logs from Azure Event Hubs",
+          "description": "Consume logs from Azure Event Hubs",
+          "code": "loki.source.azure_event_hubs \"events\" {\n  fully_qualified_namespace = \"mynamespace.servicebus.windows.net\"\n  event_hubs = [\"logs\"]\n  authentication {\n    connection_string = env(\"AZURE_EVENT_HUB_CONNECTION_STRING\")\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.cloudflare",
+      "category": "loki",
+      "name": "source.cloudflare",
+      "displayName": "Loki Cloudflare Source",
+      "description": "Receives log entries from Cloudflare Logpush",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.cloudflare/",
+      "examples": [
+        {
+          "title": "Receive Cloudflare logs",
+          "description": "Ingest logs from Cloudflare Logpush",
+          "code": "loki.source.cloudflare \"logpush\" {\n  http {\n    listen_address = \"0.0.0.0\"\n    listen_port = 8080\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.docker",
+      "category": "loki",
+      "name": "source.docker",
+      "displayName": "Loki Docker Source",
+      "description": "Reads log entries from Docker containers",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.docker/",
+      "examples": [
+        {
+          "title": "Read Docker container logs",
+          "description": "Tail logs from Docker containers",
+          "code": "loki.source.docker \"containers\" {\n  host = \"unix:///var/run/docker.sock\"\n  targets = discovery.docker.containers.targets\n  forward_to = [loki.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.file",
+      "category": "loki",
+      "name": "source.file",
+      "displayName": "Loki File Source",
+      "description": "Reads log entries from files on the local filesystem",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.file/",
+      "examples": [
+        {
+          "title": "Read log files",
+          "description": "Tail log files from the filesystem",
+          "code": "loki.source.file \"logs\" {\n  targets = [{\n    __path__ = \"/var/log/*.log\",\n    job = \"system\",\n  }]\n  forward_to = [loki.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.gcplog",
+      "category": "loki",
+      "name": "source.gcplog",
+      "displayName": "Loki GCP Log Source",
+      "description": "Receives log entries from Google Cloud Pub/Sub",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.gcplog/",
+      "examples": [
+        {
+          "title": "Receive GCP logs",
+          "description": "Consume logs from Google Cloud Pub/Sub",
+          "code": "loki.source.gcplog \"pubsub\" {\n  pull_target {\n    subscription = \"projects/my-project/subscriptions/logs\"\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.gelf",
+      "category": "loki",
+      "name": "source.gelf",
+      "displayName": "Loki GELF Source",
+      "description": "Receives log entries in Graylog Extended Log Format (GELF)",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.gelf/",
+      "examples": [
+        {
+          "title": "Receive GELF logs",
+          "description": "Accept logs in Graylog Extended Log Format",
+          "code": "loki.source.gelf \"graylog\" {\n  listen_address = \"0.0.0.0:12201\"\n  forward_to = [loki.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.heroku",
+      "category": "loki",
+      "name": "source.heroku",
+      "displayName": "Loki Heroku Source",
+      "description": "Receives log entries from Heroku log drains",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.heroku/",
+      "examples": [
+        {
+          "title": "Receive Heroku logs",
+          "description": "Ingest logs from Heroku log drains",
+          "code": "loki.source.heroku \"drain\" {\n  http {\n    listen_address = \"0.0.0.0\"\n    listen_port = 8080\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.journal",
+      "category": "loki",
+      "name": "source.journal",
+      "displayName": "Loki Journal Source",
+      "description": "Reads log entries from systemd journal",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.journal/",
+      "examples": [
+        {
+          "title": "Read systemd journal",
+          "description": "Tail logs from systemd journal",
+          "code": "loki.source.journal \"system\" {\n  forward_to = [loki.write.default.receiver]\n  labels = {\n    job = \"systemd-journal\",\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.kafka",
+      "category": "loki",
+      "name": "source.kafka",
+      "displayName": "Loki Kafka Source",
+      "description": "Reads log entries from Apache Kafka topics",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.kafka/",
+      "examples": [
+        {
+          "title": "Read logs from Kafka",
+          "description": "Consume log messages from Kafka topics",
+          "code": "loki.source.kafka \"logs\" {\n  brokers = [\"kafka:9092\"]\n  topics = [\"logs\"]\n  forward_to = [loki.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.kubernetes",
+      "category": "loki",
+      "name": "source.kubernetes",
+      "displayName": "Loki Kubernetes Source",
+      "description": "Discovers and reads log files from Kubernetes pods",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.kubernetes/",
+      "examples": [
+        {
+          "title": "Read Kubernetes pod logs",
+          "description": "Discover and tail Kubernetes pod logs",
+          "code": "loki.source.kubernetes \"pods\" {\n  targets = discovery.kubernetes.pods.targets\n  forward_to = [loki.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.kubernetes_events",
+      "category": "loki",
+      "name": "source.kubernetes_events",
+      "displayName": "Loki Kubernetes Events Source",
+      "description": "Collects Kubernetes events as log entries",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.kubernetes_events/",
+      "examples": [
+        {
+          "title": "Collect Kubernetes events",
+          "description": "Convert Kubernetes events to log entries",
+          "code": "loki.source.kubernetes_events \"events\" {\n  forward_to = [loki.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.podlogs",
+      "category": "loki",
+      "name": "source.podlogs",
+      "displayName": "Loki Pod Logs Source",
+      "description": "Discovers Kubernetes pods and reads their logs",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.podlogs/",
+      "examples": [
+        {
+          "title": "Read pod logs",
+          "description": "Discover pods and read their logs",
+          "code": "loki.source.podlogs \"pods\" {\n  forward_to = [loki.write.default.receiver]\n  selector {\n    match_labels = {\n      app = \"my-app\",\n    }\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.syslog",
+      "category": "loki",
+      "name": "source.syslog",
+      "displayName": "Loki Syslog Source",
+      "description": "Receives log entries via syslog protocol",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.syslog/",
+      "examples": [
+        {
+          "title": "Receive syslog messages",
+          "description": "Accept logs via syslog protocol",
+          "code": "loki.source.syslog \"network\" {\n  listener {\n    address = \"0.0.0.0:514\"\n    protocol = \"tcp\"\n  }\n  forward_to = [loki.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.source.windowsevent",
+      "category": "loki",
+      "name": "source.windowsevent",
+      "displayName": "Loki Windows Event Source",
+      "description": "Reads log entries from Windows Event Log",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.windowsevent/",
+      "examples": [
+        {
+          "title": "Read Windows Event Log",
+          "description": "Collect logs from Windows Event Log",
+          "code": "loki.source.windowsevent \"system\" {\n  eventlog_name = \"System\"\n  forward_to = [loki.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "loki.write",
+      "category": "loki",
+      "name": "write",
+      "displayName": "Loki Write",
+      "description": "Sends log entries to Loki using the remote write API",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/loki/loki.write/",
+      "examples": [
+        {
+          "title": "Write logs to Loki",
+          "description": "Send log entries to Grafana Loki",
+          "code": "loki.write \"default\" {\n  endpoint {\n    url = \"http://loki:3100/loki/api/v1/push\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "mimir.alerts.kubernetes",
+      "category": "mimir",
+      "name": "alerts.kubernetes",
+      "displayName": "Mimir Kubernetes Alerts",
+      "description": "Discovers and syncs Mimir alerting rules from Kubernetes PrometheusRule resources",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/mimir/mimir.alerts.kubernetes/",
+      "examples": [
+        {
+          "title": "Sync Mimir alerts from Kubernetes",
+          "description": "Discover and sync Mimir alerting rules from Kubernetes",
+          "code": "mimir.alerts.kubernetes \"alerts\" {\n  address = \"http://mimir:8080\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "mimir.rules.kubernetes",
+      "category": "mimir",
+      "name": "rules.kubernetes",
+      "displayName": "Mimir Kubernetes Rules",
+      "description": "Discovers and syncs Mimir recording rules from Kubernetes PrometheusRule resources",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/mimir/mimir.rules.kubernetes/",
+      "examples": [
+        {
+          "title": "Sync Mimir rules from Kubernetes",
+          "description": "Discover and sync Mimir recording rules from Kubernetes PrometheusRule resources",
+          "code": "mimir.rules.kubernetes \"rules\" {\n  address = \"http://mimir:8080\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.auth.basic",
+      "category": "otelcol",
+      "name": "auth.basic",
+      "displayName": "OTel Basic Auth",
+      "description": "Provides HTTP basic authentication for OpenTelemetry components",
+      "stability": "stable",
+      "type": "extension",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.auth.basic/",
+      "examples": [
+        {
+          "title": "Basic authentication for OTLP",
+          "description": "Configure HTTP basic auth for OpenTelemetry exporters",
+          "code": "otelcol.auth.basic \"creds\" {\n  username = \"user\"\n  password = env(\"OTEL_PASSWORD\")\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.auth.bearer",
+      "category": "otelcol",
+      "name": "auth.bearer",
+      "displayName": "OTel Bearer Auth",
+      "description": "Provides HTTP bearer token authentication for OpenTelemetry components",
+      "stability": "stable",
+      "type": "extension",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.auth.bearer/",
+      "examples": [
+        {
+          "title": "Bearer token authentication",
+          "description": "Configure bearer token auth for OpenTelemetry exporters",
+          "code": "otelcol.auth.bearer \"token\" {\n  token = env(\"BEARER_TOKEN\")\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.auth.headers",
+      "category": "otelcol",
+      "name": "auth.headers",
+      "displayName": "OTel Headers Auth",
+      "description": "Provides custom HTTP header authentication for OpenTelemetry components",
+      "stability": "stable",
+      "type": "extension",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.auth.headers/",
+      "examples": [
+        {
+          "title": "Custom header authentication",
+          "description": "Add custom HTTP headers for authentication",
+          "code": "otelcol.auth.headers \"custom\" {\n  headers = {\n    \"X-API-Key\" = env(\"API_KEY\"),\n    \"X-Scope-OrgID\" = \"tenant-1\",\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.auth.oauth2",
+      "category": "otelcol",
+      "name": "auth.oauth2",
+      "displayName": "OTel OAuth2 Auth",
+      "description": "Provides OAuth2 authentication for OpenTelemetry components",
+      "stability": "stable",
+      "type": "extension",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.auth.oauth2/",
+      "examples": [
+        {
+          "title": "OAuth2 authentication",
+          "description": "Configure OAuth2 client credentials flow",
+          "code": "otelcol.auth.oauth2 \"oauth\" {\n  client_id = \"my-client\"\n  client_secret = env(\"OAUTH_SECRET\")\n  token_url = \"https://oauth.example.com/token\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.auth.sigv4",
+      "category": "otelcol",
+      "name": "auth.sigv4",
+      "displayName": "OTel AWS SigV4 Auth",
+      "description": "Provides AWS Signature Version 4 authentication for OpenTelemetry components",
+      "stability": "stable",
+      "type": "extension",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.auth.sigv4/",
+      "examples": [
+        {
+          "title": "AWS SigV4 authentication",
+          "description": "Sign requests with AWS Signature Version 4",
+          "code": "otelcol.auth.sigv4 \"aws\" {\n  region = \"us-east-1\"\n  service = \"aps\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.connector.host_info",
+      "category": "otelcol",
+      "name": "connector.host_info",
+      "displayName": "OTel Host Info Connector",
+      "description": "Connects OpenTelemetry pipelines and adds host information to telemetry data",
+      "stability": "stable",
+      "type": "connector",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.connector.host_info/",
+      "examples": [
+        {
+          "title": "Add host information to telemetry",
+          "description": "Enrich telemetry with host metadata",
+          "code": "otelcol.connector.host_info \"default\" {\n  host_identifiers = [\"host.name\", \"host.id\"]\n  \n  output {\n    metrics = [otelcol.exporter.otlp.default.input]\n    logs = [otelcol.exporter.otlp.default.input]\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.connector.servicegraph",
+      "category": "otelcol",
+      "name": "connector.servicegraph",
+      "displayName": "OTel Service Graph Connector",
+      "description": "Generates service graph metrics from trace spans",
+      "stability": "stable",
+      "type": "connector",
+      "signals": [
+        "traces",
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.connector.servicegraph/",
+      "examples": [
+        {
+          "title": "Generate service graph metrics",
+          "description": "Create service dependency metrics from traces",
+          "code": "otelcol.connector.servicegraph \"default\" {\n  dimensions = [\"service.name\", \"service.namespace\"]\n  \n  output {\n    metrics = [otelcol.exporter.prometheus.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.connector.spanlogs",
+      "category": "otelcol",
+      "name": "connector.spanlogs",
+      "displayName": "OTel Span Logs Connector",
+      "description": "Converts trace spans into log entries",
+      "stability": "stable",
+      "type": "connector",
+      "signals": [
+        "traces",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.connector.spanlogs/",
+      "examples": [
+        {
+          "title": "Convert spans to logs",
+          "description": "Transform trace spans into log entries",
+          "code": "otelcol.connector.spanlogs \"default\" {\n  output {\n    logs = [otelcol.exporter.loki.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.connector.spanmetrics",
+      "category": "otelcol",
+      "name": "connector.spanmetrics",
+      "displayName": "OTel Span Metrics Connector",
+      "description": "Generates metrics from trace spans for RED metrics",
+      "stability": "stable",
+      "type": "connector",
+      "signals": [
+        "traces",
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.connector.spanmetrics/",
+      "examples": [
+        {
+          "title": "Generate RED metrics from spans",
+          "description": "Create Rate, Errors, Duration metrics from traces",
+          "code": "otelcol.connector.spanmetrics \"default\" {\n  histogram {\n    explicit {\n      buckets = [\"0.1s\", \"0.5s\", \"1s\", \"5s\", \"10s\"]\n    }\n  }\n  \n  output {\n    metrics = [otelcol.exporter.prometheus.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.exporter.debug",
+      "category": "otelcol",
+      "name": "exporter.debug",
+      "displayName": "OTel Debug Exporter",
+      "description": "Exports telemetry data to stdout for debugging purposes",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.exporter.debug/",
+      "examples": [
+        {
+          "title": "Debug exporter for testing",
+          "description": "Print telemetry to stdout for debugging",
+          "code": "otelcol.exporter.debug \"default\" {\n  verbosity = \"detailed\"\n  sampling_initial = 5\n  sampling_thereafter = 1\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.exporter.loadbalancing",
+      "category": "otelcol",
+      "name": "exporter.loadbalancing",
+      "displayName": "OTel Load Balancing Exporter",
+      "description": "Load balances telemetry data across multiple backend endpoints",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.exporter.loadbalancing/",
+      "examples": [
+        {
+          "title": "Load balance across backends",
+          "description": "Distribute telemetry across multiple endpoints",
+          "code": "otelcol.exporter.loadbalancing \"backends\" {\n  resolver {\n    static {\n      hostnames = [\"backend1:4317\", \"backend2:4317\"]\n    }\n  }\n  protocol {\n    otlp {\n      client {}\n    }\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.exporter.logging",
+      "category": "otelcol",
+      "name": "exporter.logging",
+      "displayName": "OTel Logging Exporter",
+      "description": "Exports telemetry data to component logs for debugging",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.exporter.logging/",
+      "examples": [
+        {
+          "title": "Log telemetry data",
+          "description": "Write telemetry to component logs",
+          "code": "otelcol.exporter.logging \"default\" {\n  verbosity = \"normal\"\n  sampling_initial = 2\n  sampling_thereafter = 500\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.exporter.loki",
+      "category": "otelcol",
+      "name": "exporter.loki",
+      "displayName": "OTel Loki Exporter",
+      "description": "Exports OpenTelemetry logs to Grafana Loki",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.exporter.loki/",
+      "examples": [
+        {
+          "title": "Export logs to Loki",
+          "description": "Send OpenTelemetry logs to Grafana Loki",
+          "code": "otelcol.exporter.loki \"default\" {\n  endpoint {\n    url = \"http://loki:3100/loki/api/v1/push\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.exporter.otlp",
+      "category": "otelcol",
+      "name": "exporter.otlp",
+      "displayName": "OTel OTLP Exporter",
+      "description": "Exports telemetry data using OpenTelemetry Protocol (OTLP)",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.exporter.otlp/",
+      "examples": [
+        {
+          "title": "Export via OTLP protocol",
+          "description": "Send telemetry using OpenTelemetry Protocol over gRPC",
+          "code": "otelcol.exporter.otlp \"default\" {\n  client {\n    endpoint = \"tempo:4317\"\n    tls {\n      insecure = true\n    }\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.exporter.otlphttp",
+      "category": "otelcol",
+      "name": "exporter.otlphttp",
+      "displayName": "OTel OTLP HTTP Exporter",
+      "description": "Exports telemetry data using OTLP over HTTP",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.exporter.otlphttp/",
+      "examples": [
+        {
+          "title": "Export via OTLP over HTTP",
+          "description": "Send telemetry using OTLP over HTTP/JSON",
+          "code": "otelcol.exporter.otlphttp \"default\" {\n  client {\n    endpoint = \"https://otlp.example.com\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.exporter.prometheus",
+      "category": "otelcol",
+      "name": "exporter.prometheus",
+      "displayName": "OTel Prometheus Exporter",
+      "description": "Exports OpenTelemetry metrics in Prometheus format",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.exporter.prometheus/",
+      "examples": [
+        {
+          "title": "Expose Prometheus metrics",
+          "description": "Export OpenTelemetry metrics in Prometheus format",
+          "code": "otelcol.exporter.prometheus \"default\" {\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.extension.jaeger_remote_sampling",
+      "category": "otelcol",
+      "name": "extension.jaeger_remote_sampling",
+      "displayName": "OTel Jaeger Remote Sampling",
+      "description": "Provides Jaeger remote sampling configuration to applications",
+      "stability": "stable",
+      "type": "extension",
+      "signals": [
+        "traces"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.extension.jaeger_remote_sampling/",
+      "examples": [
+        {
+          "title": "Jaeger remote sampling",
+          "description": "Provide sampling configuration to Jaeger clients",
+          "code": "otelcol.extension.jaeger_remote_sampling \"default\" {\n  grpc {\n    endpoint = \"0.0.0.0:14250\"\n  }\n  source {\n    remote {\n      endpoint = \"jaeger-collector:14250\"\n    }\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.processor.attributes",
+      "category": "otelcol",
+      "name": "processor.attributes",
+      "displayName": "OTel Attributes Processor",
+      "description": "Modifies attributes of spans, metrics, and logs",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.processor.attributes/",
+      "examples": [
+        {
+          "title": "Modify telemetry attributes",
+          "description": "Add, update, or delete attributes from spans, metrics, and logs",
+          "code": "otelcol.processor.attributes \"default\" {\n  action {\n    key = \"environment\"\n    value = \"production\"\n    action = \"insert\"\n  }\n  \n  output {\n    metrics = [otelcol.exporter.otlp.default.input]\n    logs = [otelcol.exporter.otlp.default.input]\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.processor.batch",
+      "category": "otelcol",
+      "name": "processor.batch",
+      "displayName": "OTel Batch Processor",
+      "description": "Batches telemetry data before sending to reduce network overhead",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.processor.batch/",
+      "examples": [
+        {
+          "title": "Batch telemetry data",
+          "description": "Batch data before sending to reduce network calls",
+          "code": "otelcol.processor.batch \"default\" {\n  timeout = \"5s\"\n  send_batch_size = 8192\n  \n  output {\n    metrics = [otelcol.exporter.otlp.default.input]\n    logs = [otelcol.exporter.otlp.default.input]\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.processor.deltatocumulative",
+      "category": "otelcol",
+      "name": "processor.deltatocumulative",
+      "displayName": "OTel Delta to Cumulative Processor",
+      "description": "Converts delta metrics to cumulative metrics",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.processor.deltatocumulative/",
+      "examples": [
+        {
+          "title": "Convert delta to cumulative metrics",
+          "description": "Transform delta temporality metrics to cumulative",
+          "code": "otelcol.processor.deltatocumulative \"default\" {\n  output {\n    metrics = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.processor.discovery",
+      "category": "otelcol",
+      "name": "processor.discovery",
+      "displayName": "OTel Discovery Processor",
+      "description": "Enriches telemetry data with metadata from service discovery",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.processor.discovery/",
+      "examples": [
+        {
+          "title": "Enrich with discovery metadata",
+          "description": "Add metadata from service discovery to telemetry",
+          "code": "otelcol.processor.discovery \"kubernetes\" {\n  targets = discovery.kubernetes.pods.targets\n  \n  output {\n    metrics = [otelcol.exporter.otlp.default.input]\n    logs = [otelcol.exporter.otlp.default.input]\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.processor.filter",
+      "category": "otelcol",
+      "name": "processor.filter",
+      "displayName": "OTel Filter Processor",
+      "description": "Filters telemetry data based on conditions",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.processor.filter/",
+      "examples": [
+        {
+          "title": "Filter telemetry data",
+          "description": "Drop unwanted telemetry based on conditions",
+          "code": "otelcol.processor.filter \"drop_health_checks\" {\n  traces {\n    span = [\"attributes[\\\"http.target\\\"] == \\\"/health\\\"\"]\n  }\n  \n  output {\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.processor.k8sattributes",
+      "category": "otelcol",
+      "name": "processor.k8sattributes",
+      "displayName": "OTel Kubernetes Attributes Processor",
+      "description": "Enriches telemetry data with Kubernetes metadata",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.processor.k8sattributes/",
+      "examples": [
+        {
+          "title": "Add Kubernetes attributes",
+          "description": "Enrich telemetry with Kubernetes pod metadata",
+          "code": "otelcol.processor.k8sattributes \"default\" {\n  extract {\n    metadata = [\"k8s.namespace.name\", \"k8s.pod.name\", \"k8s.deployment.name\"]\n  }\n  \n  output {\n    metrics = [otelcol.exporter.otlp.default.input]\n    logs = [otelcol.exporter.otlp.default.input]\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.processor.memory_limiter",
+      "category": "otelcol",
+      "name": "processor.memory_limiter",
+      "displayName": "OTel Memory Limiter Processor",
+      "description": "Prevents out of memory errors by limiting memory usage",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.processor.memory_limiter/",
+      "examples": [
+        {
+          "title": "Limit memory usage",
+          "description": "Prevent out-of-memory by limiting memory consumption",
+          "code": "otelcol.processor.memory_limiter \"default\" {\n  check_interval = \"1s\"\n  limit_mib = 512\n  spike_limit_mib = 128\n  \n  output {\n    metrics = [otelcol.exporter.otlp.default.input]\n    logs = [otelcol.exporter.otlp.default.input]\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.processor.probabilistic_sampler",
+      "category": "otelcol",
+      "name": "processor.probabilistic_sampler",
+      "displayName": "OTel Probabilistic Sampler Processor",
+      "description": "Samples traces probabilistically based on configured percentage",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "traces",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.processor.probabilistic_sampler/",
+      "examples": [
+        {
+          "title": "Probabilistically sample traces",
+          "description": "Sample a percentage of traces to reduce volume",
+          "code": "otelcol.processor.probabilistic_sampler \"default\" {\n  sampling_percentage = 10.0\n  \n  output {\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.processor.resource",
+      "category": "otelcol",
+      "name": "processor.resource",
+      "displayName": "OTel Resource Processor",
+      "description": "Modifies resource attributes of telemetry data",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.processor.resource/",
+      "examples": [
+        {
+          "title": "Modify resource attributes",
+          "description": "Transform resource-level attributes",
+          "code": "otelcol.processor.resource \"default\" {\n  attributes {\n    key = \"service.namespace\"\n    value = \"production\"\n    action = \"insert\"\n  }\n  \n  output {\n    metrics = [otelcol.exporter.otlp.default.input]\n    logs = [otelcol.exporter.otlp.default.input]\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.processor.resourcedetection",
+      "category": "otelcol",
+      "name": "processor.resourcedetection",
+      "displayName": "OTel Resource Detection Processor",
+      "description": "Automatically detects resource information from the environment",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.processor.resourcedetection/",
+      "examples": [
+        {
+          "title": "Detect resource attributes",
+          "description": "Automatically detect cloud and host attributes",
+          "code": "otelcol.processor.resourcedetection \"default\" {\n  detectors = [\"env\", \"system\", \"docker\"]\n  \n  output {\n    metrics = [otelcol.exporter.otlp.default.input]\n    logs = [otelcol.exporter.otlp.default.input]\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.processor.span",
+      "category": "otelcol",
+      "name": "processor.span",
+      "displayName": "OTel Span Processor",
+      "description": "Modifies span name and attributes based on conditions",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "traces"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.processor.span/",
+      "examples": [
+        {
+          "title": "Modify span attributes",
+          "description": "Transform span names and attributes",
+          "code": "otelcol.processor.span \"default\" {\n  name {\n    to_attributes {\n      rules = [\"^/api/v1/(?P<version>\\\\d+).*\"]\n    }\n  }\n  \n  output {\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.processor.tail_sampling",
+      "category": "otelcol",
+      "name": "processor.tail_sampling",
+      "displayName": "OTel Tail Sampling Processor",
+      "description": "Samples traces based on their complete data after completion",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "traces"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.processor.tail_sampling/",
+      "examples": [
+        {
+          "title": "Tail-based sampling",
+          "description": "Sample complete traces based on trace data",
+          "code": "otelcol.processor.tail_sampling \"default\" {\n  policy {\n    name = \"sample_errors\"\n    type = \"status_code\"\n    status_code {\n      status_codes = [\"ERROR\"]\n    }\n  }\n  \n  output {\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.processor.transform",
+      "category": "otelcol",
+      "name": "processor.transform",
+      "displayName": "OTel Transform Processor",
+      "description": "Transforms telemetry data using OpenTelemetry Transformation Language (OTTL)",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.processor.transform/",
+      "examples": [
+        {
+          "title": "Transform telemetry with OTTL",
+          "description": "Apply transformations using OpenTelemetry Transformation Language",
+          "code": "otelcol.processor.transform \"default\" {\n  error_mode = \"ignore\"\n  \n  trace_statements {\n    context = \"span\"\n    statements = [\n      \"set(status.code, 1) where attributes[\\\"http.status_code\\\"] == 200\",\n    ]\n  }\n  \n  output {\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.receiver.datadog",
+      "category": "otelcol",
+      "name": "receiver.datadog",
+      "displayName": "OTel Datadog Receiver",
+      "description": "Receives traces and metrics in Datadog format",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "traces",
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.receiver.datadog/",
+      "examples": [
+        {
+          "title": "Receive Datadog telemetry",
+          "description": "Accept traces and metrics in Datadog format",
+          "code": "otelcol.receiver.datadog \"default\" {\n  endpoint = \"0.0.0.0:8126\"\n  \n  output {\n    metrics = [otelcol.exporter.otlp.default.input]\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.receiver.file_stats",
+      "category": "otelcol",
+      "name": "receiver.file_stats",
+      "displayName": "OTel File Stats Receiver",
+      "description": "Collects metrics about file system statistics",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.receiver.file_stats/",
+      "examples": [
+        {
+          "title": "Collect file statistics",
+          "description": "Monitor file size and modification time",
+          "code": "otelcol.receiver.file_stats \"logs\" {\n  include = \"/var/log/**/*.log\"\n  \n  output {\n    metrics = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.receiver.jaeger",
+      "category": "otelcol",
+      "name": "receiver.jaeger",
+      "displayName": "OTel Jaeger Receiver",
+      "description": "Receives traces in Jaeger format",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "traces"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.receiver.jaeger/",
+      "examples": [
+        {
+          "title": "Receive Jaeger traces",
+          "description": "Accept traces in Jaeger format",
+          "code": "otelcol.receiver.jaeger \"default\" {\n  protocols {\n    grpc {\n      endpoint = \"0.0.0.0:14250\"\n    }\n    thrift_http {\n      endpoint = \"0.0.0.0:14268\"\n    }\n  }\n  \n  output {\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.receiver.kafka",
+      "category": "otelcol",
+      "name": "receiver.kafka",
+      "displayName": "OTel Kafka Receiver",
+      "description": "Receives telemetry data from Kafka topics",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.receiver.kafka/",
+      "examples": [
+        {
+          "title": "Receive telemetry from Kafka",
+          "description": "Consume OpenTelemetry data from Kafka topics",
+          "code": "otelcol.receiver.kafka \"default\" {\n  brokers = [\"kafka:9092\"]\n  topic = \"otlp_spans\"\n  protocol_version = \"2.0.0\"\n  \n  output {\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.receiver.loki",
+      "category": "otelcol",
+      "name": "receiver.loki",
+      "displayName": "OTel Loki Receiver",
+      "description": "Receives logs from Loki and converts to OpenTelemetry format",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.receiver.loki/",
+      "examples": [
+        {
+          "title": "Receive logs from Loki",
+          "description": "Convert Loki logs to OpenTelemetry format",
+          "code": "otelcol.receiver.loki \"default\" {\n  forward_to = [otelcol.processor.batch.default.input]\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.receiver.opencensus",
+      "category": "otelcol",
+      "name": "receiver.opencensus",
+      "displayName": "OTel OpenCensus Receiver",
+      "description": "Receives telemetry data in OpenCensus format",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "traces",
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.receiver.opencensus/",
+      "examples": [
+        {
+          "title": "Receive OpenCensus telemetry",
+          "description": "Accept data in OpenCensus format",
+          "code": "otelcol.receiver.opencensus \"default\" {\n  endpoint = \"0.0.0.0:55678\"\n  \n  output {\n    metrics = [otelcol.exporter.otlp.default.input]\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.receiver.otlp",
+      "category": "otelcol",
+      "name": "receiver.otlp",
+      "displayName": "OTel OTLP Receiver",
+      "description": "Receives telemetry data using OpenTelemetry Protocol (OTLP)",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.receiver.otlp/",
+      "examples": [
+        {
+          "title": "Receive OTLP telemetry",
+          "description": "Accept OpenTelemetry Protocol data via gRPC and HTTP",
+          "code": "otelcol.receiver.otlp \"default\" {\n  grpc {\n    endpoint = \"0.0.0.0:4317\"\n  }\n  \n  http {\n    endpoint = \"0.0.0.0:4318\"\n  }\n  \n  output {\n    metrics = [otelcol.exporter.otlp.default.input]\n    logs = [otelcol.exporter.otlp.default.input]\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.receiver.prometheus",
+      "category": "otelcol",
+      "name": "receiver.prometheus",
+      "displayName": "OTel Prometheus Receiver",
+      "description": "Receives metrics from Prometheus scrape targets",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.receiver.prometheus/",
+      "examples": [
+        {
+          "title": "Scrape Prometheus metrics",
+          "description": "Collect metrics from Prometheus endpoints",
+          "code": "otelcol.receiver.prometheus \"default\" {\n  targets = [{\n    __address__ = \"localhost:9090\",\n  }]\n  \n  output {\n    metrics = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.receiver.vcenter",
+      "category": "otelcol",
+      "name": "receiver.vcenter",
+      "displayName": "OTel vCenter Receiver",
+      "description": "Collects metrics from VMware vCenter Server",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.receiver.vcenter/",
+      "examples": [
+        {
+          "title": "Collect vCenter metrics",
+          "description": "Monitor VMware vCenter Server",
+          "code": "otelcol.receiver.vcenter \"default\" {\n  endpoint = \"https://vcenter.example.com\"\n  username = env(\"VCENTER_USER\")\n  password = env(\"VCENTER_PASSWORD\")\n  \n  output {\n    metrics = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "otelcol.receiver.zipkin",
+      "category": "otelcol",
+      "name": "receiver.zipkin",
+      "displayName": "OTel Zipkin Receiver",
+      "description": "Receives traces in Zipkin format",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "traces"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.receiver.zipkin/",
+      "examples": [
+        {
+          "title": "Receive Zipkin traces",
+          "description": "Accept traces in Zipkin format",
+          "code": "otelcol.receiver.zipkin \"default\" {\n  endpoint = \"0.0.0.0:9411\"\n  \n  output {\n    traces = [otelcol.exporter.otlp.default.input]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.echo",
+      "category": "prometheus",
+      "name": "echo",
+      "displayName": "Prometheus Echo",
+      "description": "Receives metrics and echoes them to the process's stdout for debugging",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.echo/",
+      "examples": [
+        {
+          "title": "Echo metrics to stdout",
+          "description": "Print received metrics to standard output for debugging",
+          "code": "prometheus.echo \"debug\" {}\n\nprometheus.scrape \"default\" {\n  targets = [{\n    __address__ = \"localhost:9090\",\n  }]\n  forward_to = [prometheus.echo.debug.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.enrich",
+      "category": "prometheus",
+      "name": "enrich",
+      "displayName": "Prometheus Enrich",
+      "description": "Enriches metrics with additional metadata from external sources",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.enrich/",
+      "examples": [
+        {
+          "title": "Enrich metrics with metadata",
+          "description": "Add additional labels to metrics from external sources",
+          "code": "prometheus.enrich \"metadata\" {\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.agent",
+      "category": "prometheus",
+      "name": "exporter.agent",
+      "displayName": "Prometheus Agent Exporter",
+      "description": "Exposes internal Alloy agent metrics in Prometheus format",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.agent/",
+      "examples": [
+        {
+          "title": "Expose Alloy internal metrics",
+          "description": "Export Grafana Alloy agent metrics",
+          "code": "prometheus.exporter.agent \"alloy\" {}\n\nprometheus.scrape \"agent_metrics\" {\n  targets = prometheus.exporter.agent.alloy.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.apache",
+      "category": "prometheus",
+      "name": "exporter.apache",
+      "displayName": "Prometheus Apache Exporter",
+      "description": "Collects and exports Apache HTTP Server metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.apache/",
+      "examples": [
+        {
+          "title": "Collect Apache metrics",
+          "description": "Export Apache HTTP Server metrics",
+          "code": "prometheus.exporter.apache \"default\" {\n  scrape_uri = \"http://localhost/server-status?auto\"\n}\n\nprometheus.scrape \"apache\" {\n  targets = prometheus.exporter.apache.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.azure",
+      "category": "prometheus",
+      "name": "exporter.azure",
+      "displayName": "Prometheus Azure Exporter",
+      "description": "Collects and exports Azure Monitor metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.azure/",
+      "examples": [
+        {
+          "title": "Collect Azure Monitor metrics",
+          "description": "Export metrics from Azure Monitor",
+          "code": "prometheus.exporter.azure \"default\" {\n  subscriptions = [\"00000000-0000-0000-0000-000000000000\"]\n  resource_type = \"Microsoft.Compute/virtualMachines\"\n}\n\nprometheus.scrape \"azure\" {\n  targets = prometheus.exporter.azure.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.blackbox",
+      "category": "prometheus",
+      "name": "exporter.blackbox",
+      "displayName": "Prometheus Blackbox Exporter",
+      "description": "Probes endpoints over HTTP, HTTPS, DNS, TCP, ICMP and gRPC",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.blackbox/",
+      "examples": [
+        {
+          "title": "Probe endpoints",
+          "description": "Perform blackbox probing of HTTP, TCP, ICMP endpoints",
+          "code": "prometheus.exporter.blackbox \"default\" {\n  config = \"{\\\"modules\\\":{\\\"http_2xx\\\":{\\\"prober\\\":\\\"http\\\"}}}\"target {\n    name = \"example\"\n    address = \"https://example.com\"\n    module = \"http_2xx\"\n  }\n}\n\nprometheus.scrape \"blackbox\" {\n  targets = prometheus.exporter.blackbox.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.cadvisor",
+      "category": "prometheus",
+      "name": "exporter.cadvisor",
+      "displayName": "Prometheus cAdvisor Exporter",
+      "description": "Collects container resource usage and performance metrics using cAdvisor",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.cadvisor/",
+      "examples": [
+        {
+          "title": "Collect container metrics",
+          "description": "Export container resource usage via cAdvisor",
+          "code": "prometheus.exporter.cadvisor \"default\" {\n  docker_host = \"unix:///var/run/docker.sock\"\n}\n\nprometheus.scrape \"cadvisor\" {\n  targets = prometheus.exporter.cadvisor.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.cloudwatch",
+      "category": "prometheus",
+      "name": "exporter.cloudwatch",
+      "displayName": "Prometheus CloudWatch Exporter",
+      "description": "Collects and exports AWS CloudWatch metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.cloudwatch/",
+      "examples": [
+        {
+          "title": "Collect CloudWatch metrics",
+          "description": "Export AWS CloudWatch metrics",
+          "code": "prometheus.exporter.cloudwatch \"default\" {\n  sts_region = \"us-east-1\"\n  \n  discovery {\n    type = \"AWS/EC2\"\n    regions = [\"us-east-1\"]\n    search_tags = {\n      env = \"prod\",\n    }\n  }\n}\n\nprometheus.scrape \"cloudwatch\" {\n  targets = prometheus.exporter.cloudwatch.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.consul",
+      "category": "prometheus",
+      "name": "exporter.consul",
+      "displayName": "Prometheus Consul Exporter",
+      "description": "Collects and exports HashiCorp Consul metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.consul/",
+      "examples": [
+        {
+          "title": "Collect Consul metrics",
+          "description": "Export HashiCorp Consul metrics",
+          "code": "prometheus.exporter.consul \"default\" {\n  server = \"http://localhost:8500\"\n}\n\nprometheus.scrape \"consul\" {\n  targets = prometheus.exporter.consul.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.dnsmasq",
+      "category": "prometheus",
+      "name": "exporter.dnsmasq",
+      "displayName": "Prometheus Dnsmasq Exporter",
+      "description": "Collects and exports Dnsmasq DNS server metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.dnsmasq/",
+      "examples": [
+        {
+          "title": "Collect Dnsmasq metrics",
+          "description": "Export Dnsmasq DNS server metrics",
+          "code": "prometheus.exporter.dnsmasq \"default\" {\n  address = \"localhost:53\"\n}\n\nprometheus.scrape \"dnsmasq\" {\n  targets = prometheus.exporter.dnsmasq.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.elasticsearch",
+      "category": "prometheus",
+      "name": "exporter.elasticsearch",
+      "displayName": "Prometheus Elasticsearch Exporter",
+      "description": "Collects and exports Elasticsearch cluster metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.elasticsearch/",
+      "examples": [
+        {
+          "title": "Collect Elasticsearch metrics",
+          "description": "Export Elasticsearch cluster metrics",
+          "code": "prometheus.exporter.elasticsearch \"default\" {\n  address = \"http://localhost:9200\"\n}\n\nprometheus.scrape \"elasticsearch\" {\n  targets = prometheus.exporter.elasticsearch.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.gcp",
+      "category": "prometheus",
+      "name": "exporter.gcp",
+      "displayName": "Prometheus GCP Exporter",
+      "description": "Collects and exports Google Cloud Platform metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.gcp/",
+      "examples": [
+        {
+          "title": "Collect GCP metrics",
+          "description": "Export Google Cloud Platform metrics",
+          "code": "prometheus.exporter.gcp \"default\" {\n  project_ids = [\"my-project\"]\n  metrics_prefixes = [\"compute.googleapis.com\"]\n}\n\nprometheus.scrape \"gcp\" {\n  targets = prometheus.exporter.gcp.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.github",
+      "category": "prometheus",
+      "name": "exporter.github",
+      "displayName": "Prometheus GitHub Exporter",
+      "description": "Collects and exports GitHub repository and organization metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.github/",
+      "examples": [
+        {
+          "title": "Collect GitHub metrics",
+          "description": "Export GitHub repository and organization metrics",
+          "code": "prometheus.exporter.github \"default\" {\n  api_token = env(\"GITHUB_TOKEN\")\n  repositories = [\"grafana/alloy\"]\n}\n\nprometheus.scrape \"github\" {\n  targets = prometheus.exporter.github.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.kafka",
+      "category": "prometheus",
+      "name": "exporter.kafka",
+      "displayName": "Prometheus Kafka Exporter",
+      "description": "Collects and exports Apache Kafka metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.kafka/",
+      "examples": [
+        {
+          "title": "Collect Kafka metrics",
+          "description": "Export Apache Kafka metrics",
+          "code": "prometheus.exporter.kafka \"default\" {\n  kafka_uris = [\"kafka:9092\"]\n}\n\nprometheus.scrape \"kafka\" {\n  targets = prometheus.exporter.kafka.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.memcached",
+      "category": "prometheus",
+      "name": "exporter.memcached",
+      "displayName": "Prometheus Memcached Exporter",
+      "description": "Collects and exports Memcached server metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.memcached/",
+      "examples": [
+        {
+          "title": "Collect Memcached metrics",
+          "description": "Export Memcached server metrics",
+          "code": "prometheus.exporter.memcached \"default\" {\n  address = \"localhost:11211\"\n}\n\nprometheus.scrape \"memcached\" {\n  targets = prometheus.exporter.memcached.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.mongodb",
+      "category": "prometheus",
+      "name": "exporter.mongodb",
+      "displayName": "Prometheus MongoDB Exporter",
+      "description": "Collects and exports MongoDB database metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.mongodb/",
+      "examples": [
+        {
+          "title": "Collect MongoDB metrics",
+          "description": "Export MongoDB database metrics",
+          "code": "prometheus.exporter.mongodb \"default\" {\n  mongodb_uri = \"mongodb://localhost:27017\"\n}\n\nprometheus.scrape \"mongodb\" {\n  targets = prometheus.exporter.mongodb.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.mssql",
+      "category": "prometheus",
+      "name": "exporter.mssql",
+      "displayName": "Prometheus MSSQL Exporter",
+      "description": "Collects and exports Microsoft SQL Server metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.mssql/",
+      "examples": [
+        {
+          "title": "Collect MSSQL metrics",
+          "description": "Export Microsoft SQL Server metrics",
+          "code": "prometheus.exporter.mssql \"default\" {\n  connection_string = \"sqlserver://user:password@localhost:1433\"\n}\n\nprometheus.scrape \"mssql\" {\n  targets = prometheus.exporter.mssql.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.mysql",
+      "category": "prometheus",
+      "name": "exporter.mysql",
+      "displayName": "Prometheus MySQL Exporter",
+      "description": "Collects and exports MySQL database metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.mysql/",
+      "examples": [
+        {
+          "title": "Collect MySQL metrics",
+          "description": "Export MySQL database metrics",
+          "code": "prometheus.exporter.mysql \"default\" {\n  data_source_name = \"root:password@(localhost:3306)/\"\n}\n\nprometheus.scrape \"mysql\" {\n  targets = prometheus.exporter.mysql.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.oracledb",
+      "category": "prometheus",
+      "name": "exporter.oracledb",
+      "displayName": "Prometheus OracleDB Exporter",
+      "description": "Collects and exports Oracle Database metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.oracledb/",
+      "examples": [
+        {
+          "title": "Collect OracleDB metrics",
+          "description": "Export Oracle Database metrics",
+          "code": "prometheus.exporter.oracledb \"default\" {\n  connection_string = \"oracle://user:password@localhost:1521/ORCLCDB\"\n}\n\nprometheus.scrape \"oracledb\" {\n  targets = prometheus.exporter.oracledb.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.postgres",
+      "category": "prometheus",
+      "name": "exporter.postgres",
+      "displayName": "Prometheus Postgres Exporter",
+      "description": "Collects and exports PostgreSQL database metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.postgres/",
+      "examples": [
+        {
+          "title": "Collect PostgreSQL metrics",
+          "description": "Export PostgreSQL database metrics",
+          "code": "prometheus.exporter.postgres \"default\" {\n  data_source_names = [\"postgresql://user:password@localhost:5432/postgres?sslmode=disable\"]\n}\n\nprometheus.scrape \"postgres\" {\n  targets = prometheus.exporter.postgres.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.process",
+      "category": "prometheus",
+      "name": "exporter.process",
+      "displayName": "Prometheus Process Exporter",
+      "description": "Collects and exports process-level metrics from the host system",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.process/",
+      "examples": [
+        {
+          "title": "Collect process metrics",
+          "description": "Export process-level metrics from the host",
+          "code": "prometheus.exporter.process \"default\" {\n  matcher {\n    name = \"{{.ExeBase}}\"\n    cmdline = [\".*\"]\n  }\n}\n\nprometheus.scrape \"process\" {\n  targets = prometheus.exporter.process.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.redis",
+      "category": "prometheus",
+      "name": "exporter.redis",
+      "displayName": "Prometheus Redis Exporter",
+      "description": "Collects and exports Redis server metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.redis/",
+      "examples": [
+        {
+          "title": "Collect Redis metrics",
+          "description": "Export Redis server metrics",
+          "code": "prometheus.exporter.redis \"default\" {\n  redis_addr = \"localhost:6379\"\n}\n\nprometheus.scrape \"redis\" {\n  targets = prometheus.exporter.redis.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.snmp",
+      "category": "prometheus",
+      "name": "exporter.snmp",
+      "displayName": "Prometheus SNMP Exporter",
+      "description": "Collects and exports metrics from SNMP-enabled devices",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.snmp/",
+      "examples": [
+        {
+          "title": "Collect SNMP metrics",
+          "description": "Export metrics from SNMP-enabled devices",
+          "code": "prometheus.exporter.snmp \"default\" {\n  config = \"{\\\"modules\\\":{\\\"default\\\":{\\\"walk\\\":[\\\"1.3.6.1.2.1\\\"]}}}\"\n  \n  target \"router\" {\n    address = \"192.168.1.1\"\n    module = \"default\"\n  }\n}\n\nprometheus.scrape \"snmp\" {\n  targets = prometheus.exporter.snmp.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.snowflake",
+      "category": "prometheus",
+      "name": "exporter.snowflake",
+      "displayName": "Prometheus Snowflake Exporter",
+      "description": "Collects and exports Snowflake data warehouse metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.snowflake/",
+      "examples": [
+        {
+          "title": "Collect Snowflake metrics",
+          "description": "Export Snowflake data warehouse metrics",
+          "code": "prometheus.exporter.snowflake \"default\" {\n  account_name = \"myaccount\"\n  username = env(\"SNOWFLAKE_USER\")\n  password = env(\"SNOWFLAKE_PASSWORD\")\n  warehouse = \"COMPUTE_WH\"\n}\n\nprometheus.scrape \"snowflake\" {\n  targets = prometheus.exporter.snowflake.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.squid",
+      "category": "prometheus",
+      "name": "exporter.squid",
+      "displayName": "Prometheus Squid Exporter",
+      "description": "Collects and exports Squid proxy server metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.squid/",
+      "examples": [
+        {
+          "title": "Collect Squid metrics",
+          "description": "Export Squid proxy server metrics",
+          "code": "prometheus.exporter.squid \"default\" {\n  address = \"localhost:3128\"\n}\n\nprometheus.scrape \"squid\" {\n  targets = prometheus.exporter.squid.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.statsd",
+      "category": "prometheus",
+      "name": "exporter.statsd",
+      "displayName": "Prometheus StatsD Exporter",
+      "description": "Receives StatsD metrics and exports them in Prometheus format",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.statsd/",
+      "examples": [
+        {
+          "title": "Receive StatsD metrics",
+          "description": "Accept StatsD metrics and export in Prometheus format",
+          "code": "prometheus.exporter.statsd \"default\" {\n  listen_udp = \":9125\"\n}\n\nprometheus.scrape \"statsd\" {\n  targets = prometheus.exporter.statsd.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.unix",
+      "category": "prometheus",
+      "name": "exporter.unix",
+      "displayName": "Prometheus Unix Exporter",
+      "description": "Collects and exports Unix/Linux system metrics (node_exporter)",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.unix/",
+      "examples": [
+        {
+          "title": "Collect system metrics",
+          "description": "Export Unix/Linux system metrics (node_exporter)",
+          "code": "prometheus.exporter.unix \"default\" {\n  enable_collectors = [\"cpu\", \"mem\", \"disk\", \"filesystem\"]\n}\n\nprometheus.scrape \"system\" {\n  targets = prometheus.exporter.unix.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.vsphere",
+      "category": "prometheus",
+      "name": "exporter.vsphere",
+      "displayName": "Prometheus vSphere Exporter",
+      "description": "Collects and exports VMware vSphere metrics",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.vsphere/",
+      "examples": [
+        {
+          "title": "Collect vSphere metrics",
+          "description": "Export VMware vSphere metrics",
+          "code": "prometheus.exporter.vsphere \"default\" {\n  vsphere_url = \"https://vcenter.example.com/sdk\"\n  vsphere_user = env(\"VSPHERE_USER\")\n  vsphere_password = env(\"VSPHERE_PASSWORD\")\n}\n\nprometheus.scrape \"vsphere\" {\n  targets = prometheus.exporter.vsphere.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.exporter.windows",
+      "category": "prometheus",
+      "name": "exporter.windows",
+      "displayName": "Prometheus Windows Exporter",
+      "description": "Collects and exports Windows system metrics (windows_exporter)",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.windows/",
+      "examples": [
+        {
+          "title": "Collect Windows metrics",
+          "description": "Export Windows system metrics (windows_exporter)",
+          "code": "prometheus.exporter.windows \"default\" {\n  enabled_collectors = [\"cpu\", \"cs\", \"logical_disk\", \"net\", \"os\", \"system\"]\n}\n\nprometheus.scrape \"windows\" {\n  targets = prometheus.exporter.windows.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.operator.podmonitors",
+      "category": "prometheus",
+      "name": "operator.podmonitors",
+      "displayName": "Prometheus PodMonitors Operator",
+      "description": "Discovers and scrapes Prometheus PodMonitor resources in Kubernetes",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.operator.podmonitors/",
+      "examples": [
+        {
+          "title": "Discover PodMonitors",
+          "description": "Scrape targets defined by Prometheus Operator PodMonitor CRDs",
+          "code": "prometheus.operator.podmonitors \"pods\" {\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.operator.probes",
+      "category": "prometheus",
+      "name": "operator.probes",
+      "displayName": "Prometheus Probes Operator",
+      "description": "Discovers and scrapes Prometheus Probe resources in Kubernetes",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.operator.probes/",
+      "examples": [
+        {
+          "title": "Discover Probes",
+          "description": "Probe targets defined by Prometheus Operator Probe CRDs",
+          "code": "prometheus.operator.probes \"probes\" {\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.operator.servicemonitors",
+      "category": "prometheus",
+      "name": "operator.servicemonitors",
+      "displayName": "Prometheus ServiceMonitors Operator",
+      "description": "Discovers and scrapes Prometheus ServiceMonitor resources in Kubernetes",
+      "stability": "stable",
+      "type": "discovery",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.operator.servicemonitors/",
+      "examples": [
+        {
+          "title": "Discover ServiceMonitors",
+          "description": "Scrape targets defined by Prometheus Operator ServiceMonitor CRDs",
+          "code": "prometheus.operator.servicemonitors \"services\" {\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.receive_http",
+      "category": "prometheus",
+      "name": "receive_http",
+      "displayName": "Prometheus HTTP Receiver",
+      "description": "Receives metrics via HTTP remote write protocol",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.receive_http/",
+      "examples": [
+        {
+          "title": "Receive metrics via HTTP",
+          "description": "Accept metrics via Prometheus remote write protocol",
+          "code": "prometheus.receive_http \"default\" {\n  http {\n    listen_address = \"0.0.0.0\"\n    listen_port = 9090\n  }\n  \n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.relabel",
+      "category": "prometheus",
+      "name": "relabel",
+      "displayName": "Prometheus Relabel",
+      "description": "Applies Prometheus-style relabeling rules to metrics",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.relabel/",
+      "examples": [
+        {
+          "title": "Relabel metrics",
+          "description": "Apply Prometheus-style relabeling rules to metrics",
+          "code": "prometheus.relabel \"example\" {\n  forward_to = [prometheus.remote_write.default.receiver]\n  \n  rule {\n    source_labels = [\"__address__\"]\n    target_label = \"instance\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.remote_write",
+      "category": "prometheus",
+      "name": "remote_write",
+      "displayName": "Prometheus Remote Write",
+      "description": "Sends metrics to Prometheus remote write endpoints",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.remote_write/",
+      "examples": [
+        {
+          "title": "Write metrics to Prometheus",
+          "description": "Send metrics to Prometheus remote write endpoint",
+          "code": "prometheus.remote_write \"default\" {\n  endpoint {\n    url = \"http://mimir:9009/api/v1/push\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.scrape",
+      "category": "prometheus",
+      "name": "scrape",
+      "displayName": "Prometheus Scrape",
+      "description": "Scrapes metrics from Prometheus-compatible endpoints",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.scrape/",
+      "examples": [
+        {
+          "title": "Scrape Prometheus metrics",
+          "description": "Scrape metrics from Prometheus-compatible endpoints",
+          "code": "prometheus.scrape \"default\" {\n  targets = [{\n    __address__ = \"localhost:9090\",\n  }]\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "prometheus.write.queue",
+      "category": "prometheus",
+      "name": "write.queue",
+      "displayName": "Prometheus Write Queue",
+      "description": "Queues and batches metrics before sending to remote write endpoints",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "metrics"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.write.queue/",
+      "examples": [
+        {
+          "title": "Queue metrics for writing",
+          "description": "Buffer and batch metrics before remote write",
+          "code": "prometheus.write.queue \"default\" {\n  forward_to = [prometheus.remote_write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "pyroscope.ebpf",
+      "category": "pyroscope",
+      "name": "ebpf",
+      "displayName": "Pyroscope eBPF",
+      "description": "Collects performance profiles using eBPF without instrumenting code",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "profiles"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/pyroscope/pyroscope.ebpf/",
+      "examples": [
+        {
+          "title": "Profile with eBPF",
+          "description": "Collect continuous profiling data using eBPF",
+          "code": "pyroscope.ebpf \"default\" {\n  forward_to = [pyroscope.write.default.receiver]\n  targets = discovery.kubernetes.pods.targets\n}"
+        }
+      ]
+    },
+    {
+      "id": "pyroscope.enrich",
+      "category": "pyroscope",
+      "name": "enrich",
+      "displayName": "Pyroscope Enrich",
+      "description": "Enriches profiling data with additional metadata",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "profiles"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/pyroscope/pyroscope.enrich/",
+      "examples": [
+        {
+          "title": "Enrich profiles",
+          "description": "Add metadata to profiling data",
+          "code": "pyroscope.enrich \"metadata\" {\n  forward_to = [pyroscope.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "pyroscope.java",
+      "category": "pyroscope",
+      "name": "java",
+      "displayName": "Pyroscope Java",
+      "description": "Collects performance profiles from Java applications using async-profiler",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "profiles"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/pyroscope/pyroscope.java/",
+      "examples": [
+        {
+          "title": "Profile Java applications",
+          "description": "Collect Java profiling data using async-profiler",
+          "code": "pyroscope.java \"default\" {\n  forward_to = [pyroscope.write.default.receiver]\n  targets = discovery.kubernetes.pods.targets\n}"
+        }
+      ]
+    },
+    {
+      "id": "pyroscope.receive_http",
+      "category": "pyroscope",
+      "name": "receive_http",
+      "displayName": "Pyroscope HTTP Receiver",
+      "description": "Receives profiling data via HTTP from Pyroscope agents",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "profiles"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/pyroscope/pyroscope.receive_http/",
+      "examples": [
+        {
+          "title": "Receive profiling data",
+          "description": "Accept profiling data via HTTP from Pyroscope agents",
+          "code": "pyroscope.receive_http \"default\" {\n  http {\n    listen_address = \"0.0.0.0\"\n    listen_port = 4040\n  }\n  \n  forward_to = [pyroscope.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "pyroscope.relabel",
+      "category": "pyroscope",
+      "name": "relabel",
+      "displayName": "Pyroscope Relabel",
+      "description": "Applies Prometheus-style relabeling rules to profiling data",
+      "stability": "stable",
+      "type": "processor",
+      "signals": [
+        "profiles"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/pyroscope/pyroscope.relabel/",
+      "examples": [
+        {
+          "title": "Relabel profiling targets",
+          "description": "Apply relabeling rules to profiling targets",
+          "code": "pyroscope.relabel \"example\" {\n  forward_to = [pyroscope.write.default.receiver]\n  \n  rule {\n    source_labels = [\"__meta_kubernetes_pod_label_app\"]\n    target_label = \"app\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "pyroscope.scrape",
+      "category": "pyroscope",
+      "name": "scrape",
+      "displayName": "Pyroscope Scrape",
+      "description": "Scrapes profiling data from pprof-compatible endpoints",
+      "stability": "stable",
+      "type": "receiver",
+      "signals": [
+        "profiles"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/pyroscope/pyroscope.scrape/",
+      "examples": [
+        {
+          "title": "Scrape profiling data",
+          "description": "Collect profiling data from pprof-compatible endpoints",
+          "code": "pyroscope.scrape \"default\" {\n  targets = [{\n    __address__ = \"localhost:6060\",\n    service_name = \"my-app\",\n  }]\n  forward_to = [pyroscope.write.default.receiver]\n}"
+        }
+      ]
+    },
+    {
+      "id": "pyroscope.write",
+      "category": "pyroscope",
+      "name": "write",
+      "displayName": "Pyroscope Write",
+      "description": "Sends profiling data to Grafana Pyroscope",
+      "stability": "stable",
+      "type": "exporter",
+      "signals": [
+        "profiles"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/pyroscope/pyroscope.write/",
+      "examples": [
+        {
+          "title": "Write profiles to Pyroscope",
+          "description": "Send profiling data to Grafana Pyroscope",
+          "code": "pyroscope.write \"default\" {\n  endpoint {\n    url = \"http://pyroscope:4040\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "remote.http",
+      "category": "remote",
+      "name": "http",
+      "displayName": "Remote HTTP",
+      "description": "Fetches configuration data from remote HTTP endpoints",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs",
+        "metrics",
+        "traces"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/remote/remote.http/",
+      "examples": [
+        {
+          "title": "Fetch remote configuration",
+          "description": "Load configuration from HTTP endpoint",
+          "code": "remote.http \"config\" {\n  url = \"https://example.com/alloy-config\"\n  poll_frequency = \"1m\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "remote.kubernetes.configmap",
+      "category": "remote",
+      "name": "kubernetes.configmap",
+      "displayName": "Remote Kubernetes ConfigMap",
+      "description": "Fetches configuration data from Kubernetes ConfigMaps",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs",
+        "metrics",
+        "traces"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/remote/remote.kubernetes.configmap/",
+      "examples": [
+        {
+          "title": "Load Kubernetes ConfigMap",
+          "description": "Read configuration from Kubernetes ConfigMap",
+          "code": "remote.kubernetes.configmap \"config\" {\n  namespace = \"default\"\n  name = \"alloy-config\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "remote.kubernetes.secret",
+      "category": "remote",
+      "name": "kubernetes.secret",
+      "displayName": "Remote Kubernetes Secret",
+      "description": "Fetches configuration data from Kubernetes Secrets",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs",
+        "metrics",
+        "traces"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/remote/remote.kubernetes.secret/",
+      "examples": [
+        {
+          "title": "Load Kubernetes Secret",
+          "description": "Read sensitive data from Kubernetes Secret",
+          "code": "remote.kubernetes.secret \"credentials\" {\n  namespace = \"default\"\n  name = \"alloy-secrets\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "remote.s3",
+      "category": "remote",
+      "name": "s3",
+      "displayName": "Remote S3",
+      "description": "Fetches configuration data from AWS S3 buckets",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs",
+        "metrics",
+        "traces"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/remote/remote.s3/",
+      "examples": [
+        {
+          "title": "Fetch configuration from S3",
+          "description": "Load configuration from AWS S3 bucket",
+          "code": "remote.s3 \"config\" {\n  path = \"s3://my-bucket/alloy-config.alloy\"\n  poll_frequency = \"5m\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "remote.vault",
+      "category": "remote",
+      "name": "vault",
+      "displayName": "Remote Vault",
+      "description": "Fetches secrets from HashiCorp Vault",
+      "stability": "stable",
+      "type": "source",
+      "signals": [
+        "logs",
+        "metrics",
+        "traces"
+      ],
+      "documentationUrl": "https://grafana.com/docs/alloy/latest/reference/components/remote/remote.vault/",
+      "examples": [
+        {
+          "title": "Fetch secrets from Vault",
+          "description": "Read secrets from HashiCorp Vault",
+          "code": "remote.vault \"secrets\" {\n  address = \"https://vault.example.com\"\n  path = \"secret/data/alloy\"\n  \n  auth {\n    method = \"token\"\n    token = env(\"VAULT_TOKEN\")\n  }\n}"
+        }
+      ]
+    }
+  ]
+}

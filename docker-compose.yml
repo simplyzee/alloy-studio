@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/Dockerfile.frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8080
+    command: npm run dev
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/Dockerfile.backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+      - alloy-bin:/usr/local/bin
+    depends_on:
+      - alloy
+    environment:
+      - ALLOY_PATH=/usr/local/bin/alloy
+      - PORT=8080
+      - CORS_ORIGIN=http://localhost:5173
+
+  alloy:
+    image: grafana/alloy:latest
+    volumes:
+      - alloy-bin:/usr/local/bin
+    entrypoint: ["sh", "-c", "cp /bin/alloy /usr/local/bin/alloy && tail -f /dev/null"]
+
+volumes:
+  alloy-bin:

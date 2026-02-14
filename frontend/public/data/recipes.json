@@ -1,0 +1,544 @@
+{
+  "recipes": [
+    {
+      "id": "k8s-metrics-to-mimir-oss",
+      "title": "Kubernetes Metrics to Mimir (Self-Hosted)",
+      "category": "monitoring",
+      "description": "Collect metrics from Kubernetes pods and send to self-hosted Mimir",
+      "difficulty": "beginner",
+      "tags": ["kubernetes", "metrics", "mimir", "oss", "self-hosted"],
+      "signals": ["metrics"],
+      "configuration": "// Discover Kubernetes pods\ndiscovery.kubernetes \"pods\" {\n  role = \"pod\"\n}\n\n// Scrape metrics from discovered pods\nprometheus.scrape \"k8s_pods\" {\n  targets    = discovery.kubernetes.pods.targets\n  forward_to = [prometheus.remote_write.mimir.receiver]\n}\n\n// Send metrics to self-hosted Mimir\nprometheus.remote_write \"mimir\" {\n  endpoint {\n    url = \"http://mimir:9009/api/v1/push\"\n    \n    // Optional: basic auth for secured Mimir\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "k8s-metrics-to-cloud",
+      "title": "Kubernetes Metrics to Grafana Cloud",
+      "category": "monitoring",
+      "description": "Collect metrics from Kubernetes pods and send to Grafana Cloud Prometheus",
+      "difficulty": "beginner",
+      "tags": ["kubernetes", "metrics", "prometheus", "grafana-cloud"],
+      "signals": ["metrics"],
+      "configuration": "// Discover Kubernetes pods\ndiscovery.kubernetes \"pods\" {\n  role = \"pod\"\n}\n\n// Scrape metrics from discovered pods\nprometheus.scrape \"k8s_pods\" {\n  targets    = discovery.kubernetes.pods.targets\n  forward_to = [prometheus.remote_write.cloud.receiver]\n}\n\n// Send metrics to Grafana Cloud\nprometheus.remote_write \"cloud\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "k8s-logs-to-loki-oss",
+      "title": "Kubernetes Logs to Loki (Self-Hosted)",
+      "category": "logging",
+      "description": "Collect logs from Kubernetes pods and send to self-hosted Loki",
+      "difficulty": "beginner",
+      "tags": ["kubernetes", "logs", "loki", "oss", "self-hosted"],
+      "signals": ["logs"],
+      "configuration": "// Collect Kubernetes pod logs\nloki.source.kubernetes \"pods\" {\n  targets    = discovery.kubernetes.pods.targets\n  forward_to = [loki.write.loki.receiver]\n}\n\n// Send logs to self-hosted Loki\nloki.write \"loki\" {\n  endpoint {\n    url = \"http://loki:3100/loki/api/v1/push\"\n    \n    // Optional: basic auth for secured Loki\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "k8s-logs-to-cloud",
+      "title": "Kubernetes Logs to Grafana Cloud",
+      "category": "logging",
+      "description": "Collect logs from Kubernetes pods and send to Grafana Cloud Loki",
+      "difficulty": "beginner",
+      "tags": ["kubernetes", "logs", "loki", "grafana-cloud"],
+      "signals": ["logs"],
+      "configuration": "// Collect Kubernetes pod logs\nloki.source.kubernetes \"pods\" {\n  targets    = discovery.kubernetes.pods.targets\n  forward_to = [loki.write.cloud.receiver]\n}\n\n// Send logs to Grafana Cloud Loki\nloki.write \"cloud\" {\n  endpoint {\n    url = \"https://logs-prod-01.grafana.net/loki/api/v1/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "otlp-traces-to-tempo-oss",
+      "title": "OTLP Traces to Tempo (Self-Hosted)",
+      "category": "tracing",
+      "description": "Receive OTLP traces and forward to self-hosted Tempo",
+      "difficulty": "beginner",
+      "tags": ["traces", "otlp", "tempo", "oss", "self-hosted"],
+      "signals": ["traces"],
+      "configuration": "// Receive OTLP traces\notelcol.receiver.otlp \"default\" {\n  grpc {\n    endpoint = \"0.0.0.0:4317\"\n  }\n  http {\n    endpoint = \"0.0.0.0:4318\"\n  }\n  output {\n    traces = [otelcol.processor.batch.default.input]\n  }\n}\n\n// Batch traces for efficiency\notelcol.processor.batch \"default\" {\n  output {\n    traces = [otelcol.exporter.otlp.tempo.input]\n  }\n}\n\n// Export to self-hosted Tempo\notelcol.exporter.otlp \"tempo\" {\n  client {\n    endpoint = \"tempo:4317\"\n    tls {\n      insecure = true\n    }\n  }\n}"
+    },
+    {
+      "id": "otlp-traces-to-cloud",
+      "title": "OTLP Traces to Grafana Cloud",
+      "category": "tracing",
+      "description": "Receive OTLP traces and forward to Grafana Cloud Tempo",
+      "difficulty": "beginner",
+      "tags": ["traces", "otlp", "tempo", "grafana-cloud"],
+      "signals": ["traces"],
+      "configuration": "// Receive OTLP traces\notelcol.receiver.otlp \"default\" {\n  grpc {\n    endpoint = \"0.0.0.0:4317\"\n  }\n  http {\n    endpoint = \"0.0.0.0:4318\"\n  }\n  output {\n    traces = [otelcol.processor.batch.default.input]\n  }\n}\n\n// Batch traces for efficiency\notelcol.processor.batch \"default\" {\n  output {\n    traces = [otelcol.exporter.otlp.tempo.input]\n  }\n}\n\n// Export to Grafana Cloud Tempo\notelcol.exporter.otlp \"tempo\" {\n  client {\n    endpoint = \"tempo-prod-01.grafana.net:443\"\n    auth {\n      authenticator = \"basicauth/cloud\"\n    }\n  }\n}\n\notelcol.auth.basic \"cloud\" {\n  username = \"your-instance-id\"\n  password = \"your-api-key\"\n}"
+    },
+    {
+      "id": "linux-node-monitoring",
+      "title": "Linux Server Monitoring (Self-Hosted)",
+      "category": "monitoring",
+      "description": "Monitor Linux server metrics and logs with self-hosted backends",
+      "difficulty": "beginner",
+      "tags": ["linux", "metrics", "logs", "node-exporter", "oss", "self-hosted"],
+      "signals": ["metrics", "logs"],
+      "configuration": "// Collect Linux system metrics\nprometheus.exporter.unix \"node\" {}\n\nprometheus.scrape \"node\" {\n  targets    = prometheus.exporter.unix.node.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\n// Collect systemd journal logs\nloki.source.journal \"systemd\" {\n  forward_to = [loki.write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"http://mimir:9009/api/v1/push\"\n    \n    // Optional: basic auth for secured Mimir\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}\n\nloki.write \"default\" {\n  endpoint {\n    url = \"http://loki:3100/loki/api/v1/push\"\n    \n    // Optional: basic auth for secured Loki\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "linux-node-monitoring-cloud",
+      "title": "Linux Server Monitoring (Grafana Cloud)",
+      "category": "monitoring",
+      "description": "Monitor Linux server metrics and logs with Grafana Cloud",
+      "difficulty": "beginner",
+      "tags": ["linux", "metrics", "logs", "node-exporter", "grafana-cloud"],
+      "signals": ["metrics", "logs"],
+      "configuration": "// Collect Linux system metrics\nprometheus.exporter.unix \"node\" {}\n\nprometheus.scrape \"node\" {\n  targets    = prometheus.exporter.unix.node.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\n// Collect systemd journal logs\nloki.source.journal \"systemd\" {\n  forward_to = [loki.write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}\n\nloki.write \"default\" {\n  endpoint {\n    url = \"https://logs-prod-01.grafana.net/loki/api/v1/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "complete-lgtm-stack",
+      "title": "Complete LGTM Stack (Self-Hosted)",
+      "category": "monitoring",
+      "description": "Full observability stack with all signal types for self-hosted deployment",
+      "difficulty": "advanced",
+      "tags": ["lgtm", "kubernetes", "full-stack", "observability", "oss", "self-hosted"],
+      "signals": ["metrics", "logs", "traces", "profiles"],
+      "configuration": "// === METRICS ===\ndiscovery.kubernetes \"pods\" {\n  role = \"pod\"\n}\n\nprometheus.scrape \"k8s\" {\n  targets    = discovery.kubernetes.pods.targets\n  forward_to = [prometheus.remote_write.mimir.receiver]\n}\n\nprometheus.remote_write \"mimir\" {\n  endpoint {\n    url = \"http://mimir:9009/api/v1/push\"\n    \n    // Optional: basic auth for secured Mimir\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}\n\n// === LOGS ===\nloki.source.kubernetes \"pods\" {\n  targets    = discovery.kubernetes.pods.targets\n  forward_to = [loki.write.loki.receiver]\n}\n\nloki.write \"loki\" {\n  endpoint {\n    url = \"http://loki:3100/loki/api/v1/push\"\n    \n    // Optional: basic auth for secured Loki\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}\n\n// === TRACES ===\notelcol.receiver.otlp \"default\" {\n  grpc {\n    endpoint = \"0.0.0.0:4317\"\n  }\n  output {\n    traces = [otelcol.processor.batch.default.input]\n  }\n}\n\notelcol.processor.batch \"default\" {\n  output {\n    traces = [otelcol.exporter.otlp.tempo.input]\n  }\n}\n\notelcol.exporter.otlp \"tempo\" {\n  client {\n    endpoint = \"tempo:4317\"\n    tls {\n      insecure = true\n    }\n  }\n}\n\n// === PROFILES ===\npyroscope.scrape \"default\" {\n  targets    = discovery.kubernetes.pods.targets\n  forward_to = [pyroscope.write.default.receiver]\n}\n\npyroscope.write \"default\" {\n  endpoint {\n    url = \"http://pyroscope:4040\"\n    \n    // Optional: basic auth for secured Pyroscope\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "complete-lgtm-stack-cloud",
+      "title": "Complete LGTM Stack (Grafana Cloud)",
+      "category": "monitoring",
+      "description": "Full observability stack with all signal types for Grafana Cloud",
+      "difficulty": "advanced",
+      "tags": ["lgtm", "kubernetes", "full-stack", "observability", "grafana-cloud"],
+      "signals": ["metrics", "logs", "traces", "profiles"],
+      "configuration": "// === METRICS ===\ndiscovery.kubernetes \"pods\" {\n  role = \"pod\"\n}\n\nprometheus.scrape \"k8s\" {\n  targets    = discovery.kubernetes.pods.targets\n  forward_to = [prometheus.remote_write.mimir.receiver]\n}\n\nprometheus.remote_write \"mimir\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}\n\n// === LOGS ===\nloki.source.kubernetes \"pods\" {\n  targets    = discovery.kubernetes.pods.targets\n  forward_to = [loki.write.loki.receiver]\n}\n\nloki.write \"loki\" {\n  endpoint {\n    url = \"https://logs-prod-01.grafana.net/loki/api/v1/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}\n\n// === TRACES ===\notelcol.receiver.otlp \"default\" {\n  grpc {\n    endpoint = \"0.0.0.0:4317\"\n  }\n  output {\n    traces = [otelcol.processor.batch.default.input]\n  }\n}\n\notelcol.processor.batch \"default\" {\n  output {\n    traces = [otelcol.exporter.otlp.tempo.input]\n  }\n}\n\notelcol.exporter.otlp \"tempo\" {\n  client {\n    endpoint = \"tempo-prod-01.grafana.net:443\"\n    auth {\n      authenticator = \"basicauth/cloud\"\n    }\n  }\n}\n\notelcol.auth.basic \"cloud\" {\n  username = \"your-instance-id\"\n  password = \"your-api-key\"\n}\n\n// === PROFILES ===\npyroscope.scrape \"default\" {\n  targets    = discovery.kubernetes.pods.targets\n  forward_to = [pyroscope.write.default.receiver]\n}\n\npyroscope.write \"default\" {\n  endpoint {\n    url = \"https://profiles-prod-01.grafana.net\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "k8s-pod-metrics-detailed",
+      "title": "Kubernetes Pod Metrics with Relabeling (Self-Hosted)",
+      "category": "monitoring",
+      "description": "Advanced Kubernetes pod monitoring with custom relabeling and filtering for self-hosted Mimir",
+      "difficulty": "intermediate",
+      "tags": ["kubernetes", "metrics", "relabeling", "filtering", "oss", "self-hosted"],
+      "signals": ["metrics"],
+      "configuration": "// Discover pods with specific annotations\ndiscovery.kubernetes \"pods\" {\n  role = \"pod\"\n}\n\n// Relabel to add custom labels\ndiscovery.relabel \"pods\" {\n  targets = discovery.kubernetes.pods.targets\n\n  // Keep only pods with prometheus.io/scrape annotation\n  rule {\n    source_labels = [\"__meta_kubernetes_pod_annotation_prometheus_io_scrape\"]\n    action        = \"keep\"\n    regex         = \"true\"\n  }\n\n  // Use custom scrape port if specified\n  rule {\n    source_labels = [\"__meta_kubernetes_pod_annotation_prometheus_io_port\"]\n    target_label  = \"__address__\"\n    regex         = \"([^:]+)(?::\\\\d+)?;(\\\\d+)\"\n    replacement   = \"$1:$2\"\n  }\n\n  // Add namespace as label\n  rule {\n    source_labels = [\"__meta_kubernetes_namespace\"]\n    target_label  = \"namespace\"\n  }\n\n  // Add pod name as label\n  rule {\n    source_labels = [\"__meta_kubernetes_pod_name\"]\n    target_label  = \"pod\"\n  }\n}\n\nprometheus.scrape \"pods\" {\n  targets    = discovery.relabel.pods.output\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"http://mimir:9009/api/v1/push\"\n    \n    // Optional: basic auth for secured Mimir\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "k8s-pod-metrics-detailed-cloud",
+      "title": "Kubernetes Pod Metrics with Relabeling (Grafana Cloud)",
+      "category": "monitoring",
+      "description": "Advanced Kubernetes pod monitoring with custom relabeling and filtering for Grafana Cloud",
+      "difficulty": "intermediate",
+      "tags": ["kubernetes", "metrics", "relabeling", "filtering", "grafana-cloud"],
+      "signals": ["metrics"],
+      "configuration": "// Discover pods with specific annotations\ndiscovery.kubernetes \"pods\" {\n  role = \"pod\"\n}\n\n// Relabel to add custom labels\ndiscovery.relabel \"pods\" {\n  targets = discovery.kubernetes.pods.targets\n\n  // Keep only pods with prometheus.io/scrape annotation\n  rule {\n    source_labels = [\"__meta_kubernetes_pod_annotation_prometheus_io_scrape\"]\n    action        = \"keep\"\n    regex         = \"true\"\n  }\n\n  // Use custom scrape port if specified\n  rule {\n    source_labels = [\"__meta_kubernetes_pod_annotation_prometheus_io_port\"]\n    target_label  = \"__address__\"\n    regex         = \"([^:]+)(?::\\\\d+)?;(\\\\d+)\"\n    replacement   = \"$1:$2\"\n  }\n\n  // Add namespace as label\n  rule {\n    source_labels = [\"__meta_kubernetes_namespace\"]\n    target_label  = \"namespace\"\n  }\n\n  // Add pod name as label\n  rule {\n    source_labels = [\"__meta_kubernetes_pod_name\"]\n    target_label  = \"pod\"\n  }\n}\n\nprometheus.scrape \"pods\" {\n  targets    = discovery.relabel.pods.output\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "k8s-traces-complete",
+      "title": "Kubernetes Distributed Tracing (Self-Hosted)",
+      "category": "tracing",
+      "description": "Complete distributed tracing setup for Kubernetes with span sampling and filtering for self-hosted Tempo",
+      "difficulty": "intermediate",
+      "tags": ["kubernetes", "traces", "otlp", "sampling", "oss", "self-hosted"],
+      "signals": ["traces"],
+      "configuration": "// OTLP receiver for traces\notelcol.receiver.otlp \"k8s\" {\n  grpc {\n    endpoint = \"0.0.0.0:4317\"\n  }\n  http {\n    endpoint = \"0.0.0.0:4318\"\n  }\n  output {\n    traces = [otelcol.processor.attributes.default.input]\n  }\n}\n\n// Add Kubernetes attributes\notelcol.processor.attributes \"default\" {\n  action {\n    key    = \"k8s.cluster.name\"\n    value  = \"production\"\n    action = \"insert\"\n  }\n  output {\n    traces = [otelcol.processor.tail_sampling.default.input]\n  }\n}\n\n// Tail-based sampling\notelcol.processor.tail_sampling \"default\" {\n  decision_wait = \"10s\"\n  \n  policy {\n    name = \"sample-errors\"\n    type = \"status_code\"\n    status_code {\n      status_codes = [\"ERROR\"]\n    }\n  }\n  \n  policy {\n    name = \"sample-slow\"\n    type = \"latency\"\n    latency {\n      threshold_ms = 1000\n    }\n  }\n  \n  output {\n    traces = [otelcol.exporter.otlp.tempo.input]\n  }\n}\n\notelcol.exporter.otlp \"tempo\" {\n  client {\n    endpoint = \"tempo:4317\"\n    tls {\n      insecure = true\n    }\n  }\n}"
+    },
+    {
+      "id": "k8s-traces-complete-cloud",
+      "title": "Kubernetes Distributed Tracing (Grafana Cloud)",
+      "category": "tracing",
+      "description": "Complete distributed tracing setup for Kubernetes with span sampling and filtering for Grafana Cloud",
+      "difficulty": "intermediate",
+      "tags": ["kubernetes", "traces", "otlp", "sampling", "grafana-cloud"],
+      "signals": ["traces"],
+      "configuration": "// OTLP receiver for traces\notelcol.receiver.otlp \"k8s\" {\n  grpc {\n    endpoint = \"0.0.0.0:4317\"\n  }\n  http {\n    endpoint = \"0.0.0.0:4318\"\n  }\n  output {\n    traces = [otelcol.processor.attributes.default.input]\n  }\n}\n\n// Add Kubernetes attributes\notelcol.processor.attributes \"default\" {\n  action {\n    key    = \"k8s.cluster.name\"\n    value  = \"production\"\n    action = \"insert\"\n  }\n  output {\n    traces = [otelcol.processor.tail_sampling.default.input]\n  }\n}\n\n// Tail-based sampling\notelcol.processor.tail_sampling \"default\" {\n  decision_wait = \"10s\"\n  \n  policy {\n    name = \"sample-errors\"\n    type = \"status_code\"\n    status_code {\n      status_codes = [\"ERROR\"]\n    }\n  }\n  \n  policy {\n    name = \"sample-slow\"\n    type = \"latency\"\n    latency {\n      threshold_ms = 1000\n    }\n  }\n  \n  output {\n    traces = [otelcol.exporter.otlp.tempo.input]\n  }\n}\n\notelcol.exporter.otlp \"tempo\" {\n  client {\n    endpoint = \"tempo-prod-01.grafana.net:443\"\n    auth {\n      authenticator = \"basicauth/cloud\"\n    }\n  }\n}\n\notelcol.auth.basic \"cloud\" {\n  username = \"your-instance-id\"\n  password = \"your-api-key\"\n}"
+    },
+    {
+      "id": "mysql-monitoring",
+      "title": "MySQL Database Monitoring (Self-Hosted)",
+      "category": "monitoring",
+      "description": "Monitor MySQL databases with mysqld_exporter for comprehensive database metrics on self-hosted Mimir",
+      "difficulty": "intermediate",
+      "tags": ["mysql", "database", "metrics", "exporter", "oss", "self-hosted"],
+      "signals": ["metrics"],
+      "configuration": "// MySQL exporter\nprometheus.exporter.mysql \"default\" {\n  data_source_name = \"exporter:password@(mysql:3306)/\"\n  \n  // Enable additional collectors\n  set_collectors = [\n    \"global_status\",\n    \"global_variables\",\n    \"info_schema.innodb_metrics\",\n    \"info_schema.tables\",\n    \"info_schema.processlist\",\n    \"slave_status\",\n  ]\n}\n\nprometheus.scrape \"mysql\" {\n  targets    = prometheus.exporter.mysql.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n  scrape_interval = \"30s\"\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"http://mimir:9009/api/v1/push\"\n    \n    // Optional: basic auth for secured Mimir\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "mysql-monitoring-cloud",
+      "title": "MySQL Database Monitoring (Grafana Cloud)",
+      "category": "monitoring",
+      "description": "Monitor MySQL databases with mysqld_exporter for comprehensive database metrics on Grafana Cloud",
+      "difficulty": "intermediate",
+      "tags": ["mysql", "database", "metrics", "exporter", "grafana-cloud"],
+      "signals": ["metrics"],
+      "configuration": "// MySQL exporter\nprometheus.exporter.mysql \"default\" {\n  data_source_name = \"exporter:password@(mysql:3306)/\"\n  \n  // Enable additional collectors\n  set_collectors = [\n    \"global_status\",\n    \"global_variables\",\n    \"info_schema.innodb_metrics\",\n    \"info_schema.tables\",\n    \"info_schema.processlist\",\n    \"slave_status\",\n  ]\n}\n\nprometheus.scrape \"mysql\" {\n  targets    = prometheus.exporter.mysql.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n  scrape_interval = \"30s\"\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "postgres-monitoring",
+      "title": "PostgreSQL Database Monitoring (Self-Hosted)",
+      "category": "monitoring",
+      "description": "Monitor PostgreSQL databases with postgres_exporter including query performance on self-hosted Mimir",
+      "difficulty": "intermediate",
+      "tags": ["postgresql", "database", "metrics", "exporter", "oss", "self-hosted"],
+      "signals": ["metrics"],
+      "configuration": "// PostgreSQL exporter\nprometheus.exporter.postgres \"default\" {\n  data_source_names = [\n    \"postgresql://postgres:password@localhost:5432/postgres?sslmode=disable\",\n  ]\n  \n  autodiscovery {\n    enabled = true\n  }\n  \n  disable_default_metrics = false\n  disable_settings_metrics = false\n}\n\nprometheus.scrape \"postgres\" {\n  targets    = prometheus.exporter.postgres.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n  scrape_interval = \"30s\"\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"http://mimir:9009/api/v1/push\"\n    \n    // Optional: basic auth for secured Mimir\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "postgres-monitoring-cloud",
+      "title": "PostgreSQL Database Monitoring (Grafana Cloud)",
+      "category": "monitoring",
+      "description": "Monitor PostgreSQL databases with postgres_exporter including query performance on Grafana Cloud",
+      "difficulty": "intermediate",
+      "tags": ["postgresql", "database", "metrics", "exporter", "grafana-cloud"],
+      "signals": ["metrics"],
+      "configuration": "// PostgreSQL exporter\nprometheus.exporter.postgres \"default\" {\n  data_source_names = [\n    \"postgresql://postgres:password@localhost:5432/postgres?sslmode=disable\",\n  ]\n  \n  autodiscovery {\n    enabled = true\n  }\n  \n  disable_default_metrics = false\n  disable_settings_metrics = false\n}\n\nprometheus.scrape \"postgres\" {\n  targets    = prometheus.exporter.postgres.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n  scrape_interval = \"30s\"\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "redis-monitoring",
+      "title": "Redis Monitoring (Self-Hosted)",
+      "category": "monitoring",
+      "description": "Monitor Redis instances with redis_exporter for cache and performance metrics on self-hosted Mimir",
+      "difficulty": "beginner",
+      "tags": ["redis", "cache", "metrics", "exporter", "oss", "self-hosted"],
+      "signals": ["metrics"],
+      "configuration": "// Redis exporter\nprometheus.exporter.redis \"default\" {\n  redis_addr = \"redis://localhost:6379\"\n  \n  // Optional: for Redis with password\n  // redis_password = \"your-password\"\n}\n\nprometheus.scrape \"redis\" {\n  targets    = prometheus.exporter.redis.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"http://mimir:9009/api/v1/push\"\n    \n    // Optional: basic auth for secured Mimir\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "redis-monitoring-cloud",
+      "title": "Redis Monitoring (Grafana Cloud)",
+      "category": "monitoring",
+      "description": "Monitor Redis instances with redis_exporter for cache and performance metrics on Grafana Cloud",
+      "difficulty": "beginner",
+      "tags": ["redis", "cache", "metrics", "exporter", "grafana-cloud"],
+      "signals": ["metrics"],
+      "configuration": "// Redis exporter\nprometheus.exporter.redis \"default\" {\n  redis_addr = \"redis://localhost:6379\"\n  \n  // Optional: for Redis with password\n  // redis_password = \"your-password\"\n}\n\nprometheus.scrape \"redis\" {\n  targets    = prometheus.exporter.redis.default.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "file-logs-to-loki",
+      "title": "File-based Log Collection (Self-Hosted)",
+      "category": "logging",
+      "description": "Collect logs from files with pattern matching and multiline support for self-hosted Loki",
+      "difficulty": "beginner",
+      "tags": ["logs", "files", "loki", "multiline", "oss", "self-hosted"],
+      "signals": ["logs"],
+      "configuration": "// Collect logs from application files\nlocal.file_match \"app_logs\" {\n  path_targets = [{\n    __address__ = \"localhost\",\n    __path__    = \"/var/log/app/*.log\",\n  }]\n}\n\nloki.source.file \"app\" {\n  targets    = local.file_match.app_logs.targets\n  forward_to = [loki.process.app.receiver]\n}\n\n// Process logs (e.g., extract JSON)\nloki.process \"app\" {\n  stage.json {\n    expressions = {\n      level = \"level\",\n      msg   = \"message\",\n    }\n  }\n  \n  stage.labels {\n    values = {\n      level = \"\",\n    }\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}\n\nloki.write \"default\" {\n  endpoint {\n    url = \"http://loki:3100/loki/api/v1/push\"\n    \n    // Optional: basic auth for secured Loki\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "file-logs-to-loki-cloud",
+      "title": "File-based Log Collection (Grafana Cloud)",
+      "category": "logging",
+      "description": "Collect logs from files with pattern matching and multiline support for Grafana Cloud",
+      "difficulty": "beginner",
+      "tags": ["logs", "files", "loki", "multiline", "grafana-cloud"],
+      "signals": ["logs"],
+      "configuration": "// Collect logs from application files\nlocal.file_match \"app_logs\" {\n  path_targets = [{\n    __address__ = \"localhost\",\n    __path__    = \"/var/log/app/*.log\",\n  }]\n}\n\nloki.source.file \"app\" {\n  targets    = local.file_match.app_logs.targets\n  forward_to = [loki.process.app.receiver]\n}\n\n// Process logs (e.g., extract JSON)\nloki.process \"app\" {\n  stage.json {\n    expressions = {\n      level = \"level\",\n      msg   = \"message\",\n    }\n  }\n  \n  stage.labels {\n    values = {\n      level = \"\",\n    }\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}\n\nloki.write \"default\" {\n  endpoint {\n    url = \"https://logs-prod-01.grafana.net/loki/api/v1/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "docker-logs-to-loki",
+      "title": "Docker Container Logs (Self-Hosted)",
+      "category": "logging",
+      "description": "Collect logs from Docker containers with automatic label extraction for self-hosted Loki",
+      "difficulty": "beginner",
+      "tags": ["docker", "logs", "containers", "loki", "oss", "self-hosted"],
+      "signals": ["logs"],
+      "configuration": "// Discover Docker containers\ndiscovery.docker \"containers\" {\n  host = \"unix:///var/run/docker.sock\"\n}\n\n// Collect Docker logs\nloki.source.docker \"containers\" {\n  host       = \"unix:///var/run/docker.sock\"\n  targets    = discovery.docker.containers.targets\n  forward_to = [loki.process.containers.receiver]\n}\n\n// Add container labels\nloki.process \"containers\" {\n  stage.docker {}\n  \n  stage.labels {\n    values = {\n      container_name = \"container_name\",\n      image_name     = \"image_name\",\n    }\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}\n\nloki.write \"default\" {\n  endpoint {\n    url = \"http://loki:3100/loki/api/v1/push\"\n    \n    // Optional: basic auth for secured Loki\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "docker-logs-to-loki-cloud",
+      "title": "Docker Container Logs (Grafana Cloud)",
+      "category": "logging",
+      "description": "Collect logs from Docker containers with automatic label extraction for Grafana Cloud",
+      "difficulty": "beginner",
+      "tags": ["docker", "logs", "containers", "loki", "grafana-cloud"],
+      "signals": ["logs"],
+      "configuration": "// Discover Docker containers\ndiscovery.docker \"containers\" {\n  host = \"unix:///var/run/docker.sock\"\n}\n\n// Collect Docker logs\nloki.source.docker \"containers\" {\n  host       = \"unix:///var/run/docker.sock\"\n  targets    = discovery.docker.containers.targets\n  forward_to = [loki.process.containers.receiver]\n}\n\n// Add container labels\nloki.process \"containers\" {\n  stage.docker {}\n  \n  stage.labels {\n    values = {\n      container_name = \"container_name\",\n      image_name     = \"image_name\",\n    }\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}\n\nloki.write \"default\" {\n  endpoint {\n    url = \"https://logs-prod-01.grafana.net/loki/api/v1/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "journal-logs-to-loki",
+      "title": "Systemd Journal Logs (Self-Hosted)",
+      "category": "logging",
+      "description": "Collect and forward systemd journal logs with unit filtering for self-hosted Loki",
+      "difficulty": "beginner",
+      "tags": ["systemd", "journal", "logs", "linux", "oss", "self-hosted"],
+      "signals": ["logs"],
+      "configuration": "// Collect systemd journal\nloki.source.journal \"systemd\" {\n  path = \"/var/log/journal\"\n  \n  // Filter by specific units\n  matches = [\n    \"_SYSTEMD_UNIT=nginx.service\",\n    \"_SYSTEMD_UNIT=postgresql.service\",\n  ]\n  \n  forward_to = [loki.process.journal.receiver]\n  \n  labels = {\n    job = \"systemd-journal\",\n  }\n}\n\nloki.process \"journal\" {\n  stage.labels {\n    values = {\n      unit     = \"__journal__systemd_unit\",\n      priority = \"__journal_priority\",\n    }\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}\n\nloki.write \"default\" {\n  endpoint {\n    url = \"http://loki:3100/loki/api/v1/push\"\n    \n    // Optional: basic auth for secured Loki\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "journal-logs-to-loki-cloud",
+      "title": "Systemd Journal Logs (Grafana Cloud)",
+      "category": "logging",
+      "description": "Collect and forward systemd journal logs with unit filtering for Grafana Cloud",
+      "difficulty": "beginner",
+      "tags": ["systemd", "journal", "logs", "linux", "grafana-cloud"],
+      "signals": ["logs"],
+      "configuration": "// Collect systemd journal\nloki.source.journal \"systemd\" {\n  path = \"/var/log/journal\"\n  \n  // Filter by specific units\n  matches = [\n    \"_SYSTEMD_UNIT=nginx.service\",\n    \"_SYSTEMD_UNIT=postgresql.service\",\n  ]\n  \n  forward_to = [loki.process.journal.receiver]\n  \n  labels = {\n    job = \"systemd-journal\",\n  }\n}\n\nloki.process \"journal\" {\n  stage.labels {\n    values = {\n      unit     = \"__journal__systemd_unit\",\n      priority = \"__journal_priority\",\n    }\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}\n\nloki.write \"default\" {\n  endpoint {\n    url = \"https://logs-prod-01.grafana.net/loki/api/v1/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "otlp-metrics-logs-traces",
+      "title": "Complete OTLP Pipeline (Self-Hosted)",
+      "category": "tracing",
+      "description": "Receive and process all OpenTelemetry signals (metrics, logs, traces) via OTLP for self-hosted backends",
+      "difficulty": "intermediate",
+      "tags": ["otlp", "opentelemetry", "metrics", "logs", "traces", "oss", "self-hosted"],
+      "signals": ["metrics", "logs", "traces"],
+      "configuration": "// OTLP receiver for all signals\notelcol.receiver.otlp \"default\" {\n  grpc {\n    endpoint = \"0.0.0.0:4317\"\n  }\n  http {\n    endpoint = \"0.0.0.0:4318\"\n  }\n  \n  output {\n    metrics = [otelcol.processor.batch.metrics.input]\n    logs    = [otelcol.processor.batch.logs.input]\n    traces  = [otelcol.processor.batch.traces.input]\n  }\n}\n\n// Batch metrics\notelcol.processor.batch \"metrics\" {\n  output {\n    metrics = [otelcol.exporter.prometheus.default.input]\n  }\n}\n\n// Batch logs\notelcol.processor.batch \"logs\" {\n  output {\n    logs = [otelcol.exporter.loki.default.input]\n  }\n}\n\n// Batch traces\notelcol.processor.batch \"traces\" {\n  output {\n    traces = [otelcol.exporter.otlp.tempo.input]\n  }\n}\n\n// Export metrics to Prometheus\notelcol.exporter.prometheus \"default\" {\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"http://mimir:9009/api/v1/push\"\n    \n    // Optional: basic auth for secured Mimir\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}\n\n// Export logs to Loki\notelcol.exporter.loki \"default\" {\n  forward_to = [loki.write.default.receiver]\n}\n\nloki.write \"default\" {\n  endpoint {\n    url = \"http://loki:3100/loki/api/v1/push\"\n    \n    // Optional: basic auth for secured Loki\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}\n\n// Export traces to Tempo\notelcol.exporter.otlp \"tempo\" {\n  client {\n    endpoint = \"tempo:4317\"\n    tls {\n      insecure = true\n    }\n  }\n}"
+    },
+    {
+      "id": "otlp-metrics-logs-traces-cloud",
+      "title": "Complete OTLP Pipeline (Grafana Cloud)",
+      "category": "tracing",
+      "description": "Receive and process all OpenTelemetry signals (metrics, logs, traces) via OTLP for Grafana Cloud",
+      "difficulty": "intermediate",
+      "tags": ["otlp", "opentelemetry", "metrics", "logs", "traces", "grafana-cloud"],
+      "signals": ["metrics", "logs", "traces"],
+      "configuration": "// OTLP receiver for all signals\notelcol.receiver.otlp \"default\" {\n  grpc {\n    endpoint = \"0.0.0.0:4317\"\n  }\n  http {\n    endpoint = \"0.0.0.0:4318\"\n  }\n  \n  output {\n    metrics = [otelcol.processor.batch.metrics.input]\n    logs    = [otelcol.processor.batch.logs.input]\n    traces  = [otelcol.processor.batch.traces.input]\n  }\n}\n\n// Batch metrics\notelcol.processor.batch \"metrics\" {\n  output {\n    metrics = [otelcol.exporter.prometheus.default.input]\n  }\n}\n\n// Batch logs\notelcol.processor.batch \"logs\" {\n  output {\n    logs = [otelcol.exporter.loki.default.input]\n  }\n}\n\n// Batch traces\notelcol.processor.batch \"traces\" {\n  output {\n    traces = [otelcol.exporter.otlp.tempo.input]\n  }\n}\n\n// Export metrics to Prometheus\notelcol.exporter.prometheus \"default\" {\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}\n\n// Export logs to Loki\notelcol.exporter.loki \"default\" {\n  forward_to = [loki.write.default.receiver]\n}\n\nloki.write \"default\" {\n  endpoint {\n    url = \"https://logs-prod-01.grafana.net/loki/api/v1/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}\n\n// Export traces to Tempo\notelcol.exporter.otlp \"tempo\" {\n  client {\n    endpoint = \"tempo-prod-01.grafana.net:443\"\n    auth {\n      authenticator = \"basicauth/cloud\"\n    }\n  }\n}\n\notelcol.auth.basic \"cloud\" {\n  username = \"your-instance-id\"\n  password = \"your-api-key\"\n}"
+    },
+    {
+      "id": "pyroscope-ebpf-profiling",
+      "title": "Continuous Profiling with eBPF (Self-Hosted)",
+      "category": "profiling",
+      "description": "Automatic continuous profiling of applications using eBPF without code changes for self-hosted Pyroscope",
+      "difficulty": "advanced",
+      "tags": ["profiling", "ebpf", "pyroscope", "performance", "oss", "self-hosted"],
+      "signals": ["profiles"],
+      "configuration": "// Discover Kubernetes pods for profiling\ndiscovery.kubernetes \"pods\" {\n  role = \"pod\"\n}\n\n// Filter pods with profiling annotation\ndiscovery.relabel \"profiling\" {\n  targets = discovery.kubernetes.pods.targets\n  \n  rule {\n    source_labels = [\"__meta_kubernetes_pod_annotation_profiles_grafana_com_enabled\"]\n    action        = \"keep\"\n    regex         = \"true\"\n  }\n}\n\n// eBPF profiling\npyroscope.ebpf \"default\" {\n  targets = discovery.relabel.profiling.output\n  \n  forward_to = [pyroscope.write.default.receiver]\n  \n  profiling_config {\n    interval         = \"15s\"\n    cpu_sample_rate  = 100\n    cache_enabled    = true\n  }\n}\n\npyroscope.write \"default\" {\n  endpoint {\n    url = \"http://pyroscope:4040\"\n    \n    // Optional: basic auth for secured Pyroscope\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "pyroscope-ebpf-profiling-cloud",
+      "title": "Continuous Profiling with eBPF (Grafana Cloud)",
+      "category": "profiling",
+      "description": "Automatic continuous profiling of applications using eBPF without code changes for Grafana Cloud",
+      "difficulty": "advanced",
+      "tags": ["profiling", "ebpf", "pyroscope", "performance", "grafana-cloud"],
+      "signals": ["profiles"],
+      "configuration": "// Discover Kubernetes pods for profiling\ndiscovery.kubernetes \"pods\" {\n  role = \"pod\"\n}\n\n// Filter pods with profiling annotation\ndiscovery.relabel \"profiling\" {\n  targets = discovery.kubernetes.pods.targets\n  \n  rule {\n    source_labels = [\"__meta_kubernetes_pod_annotation_profiles_grafana_com_enabled\"]\n    action        = \"keep\"\n    regex         = \"true\"\n  }\n}\n\n// eBPF profiling\npyroscope.ebpf \"default\" {\n  targets = discovery.relabel.profiling.output\n  \n  forward_to = [pyroscope.write.default.receiver]\n  \n  profiling_config {\n    interval         = \"15s\"\n    cpu_sample_rate  = 100\n    cache_enabled    = true\n  }\n}\n\npyroscope.write \"default\" {\n  endpoint {\n    url = \"https://profiles-prod-01.grafana.net\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "pyroscope-scrape-profiling",
+      "title": "Scrape-based Profiling (Self-Hosted)",
+      "category": "profiling",
+      "description": "Scrape profiling data from applications exposing pprof endpoints for self-hosted Pyroscope",
+      "difficulty": "intermediate",
+      "tags": ["profiling", "pprof", "pyroscope", "scraping", "oss", "self-hosted"],
+      "signals": ["profiles"],
+      "configuration": "// Discover targets with profiling endpoints\ndiscovery.kubernetes \"pods\" {\n  role = \"pod\"\n}\n\ndiscovery.relabel \"pprof\" {\n  targets = discovery.kubernetes.pods.targets\n  \n  rule {\n    source_labels = [\"__meta_kubernetes_pod_annotation_pyroscope_io_scrape\"]\n    action        = \"keep\"\n    regex         = \"true\"\n  }\n  \n  rule {\n    source_labels = [\"__meta_kubernetes_pod_annotation_pyroscope_io_port\"]\n    target_label  = \"__address__\"\n    regex         = \"([^:]+)(?::\\\\d+)?;(\\\\d+)\"\n    replacement   = \"$1:$2\"\n  }\n}\n\n// Scrape pprof endpoints\npyroscope.scrape \"default\" {\n  targets = discovery.relabel.pprof.output\n  \n  forward_to = [pyroscope.write.default.receiver]\n  \n  profiling_config {\n    profile.process_cpu {\n      enabled = true\n      path    = \"/debug/pprof/profile\"\n    }\n    profile.memory {\n      enabled = true\n      path    = \"/debug/pprof/heap\"\n    }\n    profile.goroutine {\n      enabled = true\n      path    = \"/debug/pprof/goroutine\"\n    }\n  }\n}\n\npyroscope.write \"default\" {\n  endpoint {\n    url = \"http://pyroscope:4040\"\n    \n    // Optional: basic auth for secured Pyroscope\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "pyroscope-scrape-profiling-cloud",
+      "title": "Scrape-based Profiling (Grafana Cloud)",
+      "category": "profiling",
+      "description": "Scrape profiling data from applications exposing pprof endpoints for Grafana Cloud",
+      "difficulty": "intermediate",
+      "tags": ["profiling", "pprof", "pyroscope", "scraping", "grafana-cloud"],
+      "signals": ["profiles"],
+      "configuration": "// Discover targets with profiling endpoints\ndiscovery.kubernetes \"pods\" {\n  role = \"pod\"\n}\n\ndiscovery.relabel \"pprof\" {\n  targets = discovery.kubernetes.pods.targets\n  \n  rule {\n    source_labels = [\"__meta_kubernetes_pod_annotation_pyroscope_io_scrape\"]\n    action        = \"keep\"\n    regex         = \"true\"\n  }\n  \n  rule {\n    source_labels = [\"__meta_kubernetes_pod_annotation_pyroscope_io_port\"]\n    target_label  = \"__address__\"\n    regex         = \"([^:]+)(?::\\\\d+)?;(\\\\d+)\"\n    replacement   = \"$1:$2\"\n  }\n}\n\n// Scrape pprof endpoints\npyroscope.scrape \"default\" {\n  targets = discovery.relabel.pprof.output\n  \n  forward_to = [pyroscope.write.default.receiver]\n  \n  profiling_config {\n    profile.process_cpu {\n      enabled = true\n      path    = \"/debug/pprof/profile\"\n    }\n    profile.memory {\n      enabled = true\n      path    = \"/debug/pprof/heap\"\n    }\n    profile.goroutine {\n      enabled = true\n      path    = \"/debug/pprof/goroutine\"\n    }\n  }\n}\n\npyroscope.write \"default\" {\n  endpoint {\n    url = \"https://profiles-prod-01.grafana.net\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "consul-service-discovery",
+      "title": "Consul Service Discovery (Self-Hosted)",
+      "category": "discovery",
+      "description": "Discover and monitor services registered in Consul for self-hosted Mimir",
+      "difficulty": "intermediate",
+      "tags": ["consul", "discovery", "service-mesh", "metrics", "oss", "self-hosted"],
+      "signals": ["metrics"],
+      "configuration": "// Discover services from Consul\ndiscovery.consul \"services\" {\n  server = \"consul.service.consul:8500\"\n  \n  // Optional: filter by service tags\n  // tags = [\"production\", \"monitoring\"]\n}\n\n// Relabel Consul metadata\ndiscovery.relabel \"consul\" {\n  targets = discovery.consul.services.targets\n  \n  rule {\n    source_labels = [\"__meta_consul_service\"]\n    target_label  = \"service\"\n  }\n  \n  rule {\n    source_labels = [\"__meta_consul_node\"]\n    target_label  = \"node\"\n  }\n  \n  rule {\n    source_labels = [\"__meta_consul_tags\"]\n    target_label  = \"tags\"\n  }\n}\n\nprometheus.scrape \"consul\" {\n  targets    = discovery.relabel.consul.output\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"http://mimir:9009/api/v1/push\"\n    \n    // Optional: basic auth for secured Mimir\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "consul-service-discovery-cloud",
+      "title": "Consul Service Discovery (Grafana Cloud)",
+      "category": "discovery",
+      "description": "Discover and monitor services registered in Consul for Grafana Cloud",
+      "difficulty": "intermediate",
+      "tags": ["consul", "discovery", "service-mesh", "metrics", "grafana-cloud"],
+      "signals": ["metrics"],
+      "configuration": "// Discover services from Consul\ndiscovery.consul \"services\" {\n  server = \"consul.service.consul:8500\"\n  \n  // Optional: filter by service tags\n  // tags = [\"production\", \"monitoring\"]\n}\n\n// Relabel Consul metadata\ndiscovery.relabel \"consul\" {\n  targets = discovery.consul.services.targets\n  \n  rule {\n    source_labels = [\"__meta_consul_service\"]\n    target_label  = \"service\"\n  }\n  \n  rule {\n    source_labels = [\"__meta_consul_node\"]\n    target_label  = \"node\"\n  }\n  \n  rule {\n    source_labels = [\"__meta_consul_tags\"]\n    target_label  = \"tags\"\n  }\n}\n\nprometheus.scrape \"consul\" {\n  targets    = discovery.relabel.consul.output\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "docker-discovery",
+      "title": "Docker Container Discovery (Self-Hosted)",
+      "category": "discovery",
+      "description": "Automatically discover and monitor Docker containers for self-hosted Mimir",
+      "difficulty": "beginner",
+      "tags": ["docker", "discovery", "containers", "metrics", "oss", "self-hosted"],
+      "signals": ["metrics"],
+      "configuration": "// Discover Docker containers\ndiscovery.docker \"containers\" {\n  host = \"unix:///var/run/docker.sock\"\n  \n  // Optional: filter by container labels\n  filter {\n    name   = \"label\"\n    values = [\"monitoring=true\"]\n  }\n}\n\n// Relabel Docker metadata\ndiscovery.relabel \"docker\" {\n  targets = discovery.docker.containers.targets\n  \n  rule {\n    source_labels = [\"__meta_docker_container_name\"]\n    target_label  = \"container\"\n  }\n  \n  rule {\n    source_labels = [\"__meta_docker_container_label_com_docker_compose_service\"]\n    target_label  = \"service\"\n  }\n}\n\nprometheus.scrape \"docker\" {\n  targets    = discovery.relabel.docker.output\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"http://mimir:9009/api/v1/push\"\n    \n    // Optional: basic auth for secured Mimir\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "docker-discovery-cloud",
+      "title": "Docker Container Discovery (Grafana Cloud)",
+      "category": "discovery",
+      "description": "Automatically discover and monitor Docker containers for Grafana Cloud",
+      "difficulty": "beginner",
+      "tags": ["docker", "discovery", "containers", "metrics", "grafana-cloud"],
+      "signals": ["metrics"],
+      "configuration": "// Discover Docker containers\ndiscovery.docker \"containers\" {\n  host = \"unix:///var/run/docker.sock\"\n  \n  // Optional: filter by container labels\n  filter {\n    name   = \"label\"\n    values = [\"monitoring=true\"]\n  }\n}\n\n// Relabel Docker metadata\ndiscovery.relabel \"docker\" {\n  targets = discovery.docker.containers.targets\n  \n  rule {\n    source_labels = [\"__meta_docker_container_name\"]\n    target_label  = \"container\"\n  }\n  \n  rule {\n    source_labels = [\"__meta_docker_container_label_com_docker_compose_service\"]\n    target_label  = \"service\"\n  }\n}\n\nprometheus.scrape \"docker\" {\n  targets    = discovery.relabel.docker.output\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "faro-frontend-observability",
+      "title": "Frontend Observability with Faro (Self-Hosted)",
+      "category": "monitoring",
+      "description": "Collect frontend telemetry including errors, logs, and web vitals from Faro SDK for self-hosted backends",
+      "difficulty": "beginner",
+      "tags": ["faro", "frontend", "rum", "web-vitals", "oss", "self-hosted"],
+      "signals": ["metrics", "logs"],
+      "configuration": "// Receive Faro data\nfaro.receiver \"frontend\" {\n  server {\n    listen_address = \"0.0.0.0\"\n    listen_port    = 12347\n    cors_allowed_origins = [\n      \"https://myapp.example.com\",\n    ]\n  }\n  \n  output {\n    logs    = [loki.process.faro.receiver]\n    traces  = [otelcol.processor.batch.traces.input]\n  }\n}\n\n// Process Faro logs\nloki.process \"faro\" {\n  stage.json {\n    expressions = {\n      level      = \"level\",\n      message    = \"message\",\n      context    = \"context\",\n      browser    = \"browser\",\n      session_id = \"session.id\",\n    }\n  }\n  \n  stage.labels {\n    values = {\n      level   = \"\",\n      browser = \"\",\n    }\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}\n\nloki.write \"default\" {\n  endpoint {\n    url = \"http://loki:3100/loki/api/v1/push\"\n    \n    // Optional: basic auth for secured Loki\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}\n\n// Process traces\notelcol.processor.batch \"traces\" {\n  output {\n    traces = [otelcol.exporter.otlp.tempo.input]\n  }\n}\n\notelcol.exporter.otlp \"tempo\" {\n  client {\n    endpoint = \"tempo:4317\"\n    tls {\n      insecure = true\n    }\n  }\n}"
+    },
+    {
+      "id": "faro-frontend-observability-cloud",
+      "title": "Frontend Observability with Faro (Grafana Cloud)",
+      "category": "monitoring",
+      "description": "Collect frontend telemetry including errors, logs, and web vitals from Faro SDK for Grafana Cloud",
+      "difficulty": "beginner",
+      "tags": ["faro", "frontend", "rum", "web-vitals", "grafana-cloud"],
+      "signals": ["metrics", "logs"],
+      "configuration": "// Receive Faro data\nfaro.receiver \"frontend\" {\n  server {\n    listen_address = \"0.0.0.0\"\n    listen_port    = 12347\n    cors_allowed_origins = [\n      \"https://myapp.example.com\",\n    ]\n  }\n  \n  output {\n    logs    = [loki.process.faro.receiver]\n    traces  = [otelcol.processor.batch.traces.input]\n  }\n}\n\n// Process Faro logs\nloki.process \"faro\" {\n  stage.json {\n    expressions = {\n      level      = \"level\",\n      message    = \"message\",\n      context    = \"context\",\n      browser    = \"browser\",\n      session_id = \"session.id\",\n    }\n  }\n  \n  stage.labels {\n    values = {\n      level   = \"\",\n      browser = \"\",\n    }\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}\n\nloki.write \"default\" {\n  endpoint {\n    url = \"https://logs-prod-01.grafana.net/loki/api/v1/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}\n\n// Process traces\notelcol.processor.batch \"traces\" {\n  output {\n    traces = [otelcol.exporter.otlp.tempo.input]\n  }\n}\n\notelcol.exporter.otlp \"tempo\" {\n  client {\n    endpoint = \"tempo-prod-01.grafana.net:443\"\n    auth {\n      authenticator = \"basicauth/cloud\"\n    }\n  }\n}\n\notelcol.auth.basic \"cloud\" {\n  username = \"your-instance-id\"\n  password = \"your-api-key\"\n}"
+    },
+    {
+      "id": "remote-config-http",
+      "title": "Remote Configuration from HTTP (Self-Hosted)",
+      "category": "discovery",
+      "description": "Load configuration dynamically from HTTP endpoints for self-hosted Mimir",
+      "difficulty": "intermediate",
+      "tags": ["remote-config", "http", "dynamic", "oss", "self-hosted"],
+      "signals": ["metrics"],
+      "configuration": "// Fetch configuration from HTTP\nremote.http \"targets\" {\n  url = \"https://config.example.com/targets.json\"\n  \n  // Poll for updates\n  poll_frequency = \"1m\"\n  poll_timeout   = \"10s\"\n  \n  // Optional: basic auth\n  // basic_auth {\n  //   username = \"user\"\n  //   password = \"pass\"\n  // }\n}\n\nprometheus.scrape \"dynamic\" {\n  targets    = json_decode(remote.http.targets.content)\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"http://mimir:9009/api/v1/push\"\n    \n    // Optional: basic auth for secured Mimir\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "remote-config-http-cloud",
+      "title": "Remote Configuration from HTTP (Grafana Cloud)",
+      "category": "discovery",
+      "description": "Load configuration dynamically from HTTP endpoints for Grafana Cloud",
+      "difficulty": "intermediate",
+      "tags": ["remote-config", "http", "dynamic", "grafana-cloud"],
+      "signals": ["metrics"],
+      "configuration": "// Fetch configuration from HTTP\nremote.http \"targets\" {\n  url = \"https://config.example.com/targets.json\"\n  \n  // Poll for updates\n  poll_frequency = \"1m\"\n  poll_timeout   = \"10s\"\n  \n  // Optional: basic auth\n  // basic_auth {\n  //   username = \"user\"\n  //   password = \"pass\"\n  // }\n}\n\nprometheus.scrape \"dynamic\" {\n  targets    = json_decode(remote.http.targets.content)\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "remote-config-s3",
+      "title": "Remote Configuration from S3 (Self-Hosted)",
+      "category": "discovery",
+      "description": "Load configuration from S3 buckets for self-hosted Mimir",
+      "difficulty": "intermediate",
+      "tags": ["remote-config", "s3", "aws", "cloud", "oss", "self-hosted"],
+      "signals": ["metrics"],
+      "configuration": "// Fetch configuration from S3\nremote.s3 \"config\" {\n  path = \"s3://my-bucket/alloy-config/targets.json\"\n  \n  poll_frequency = \"5m\"\n  \n  // AWS credentials (can also use IAM role)\n  // access_key = \"AKIAIOSFODNN7EXAMPLE\"\n  // secret_key = \"wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY\"\n}\n\nprometheus.scrape \"s3_targets\" {\n  targets    = json_decode(remote.s3.config.content)\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"http://mimir:9009/api/v1/push\"\n    \n    // Optional: basic auth for secured Mimir\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "remote-config-s3-cloud",
+      "title": "Remote Configuration from S3 (Grafana Cloud)",
+      "category": "discovery",
+      "description": "Load configuration from S3 buckets for Grafana Cloud",
+      "difficulty": "intermediate",
+      "tags": ["remote-config", "s3", "aws", "cloud", "grafana-cloud"],
+      "signals": ["metrics"],
+      "configuration": "// Fetch configuration from S3\nremote.s3 \"config\" {\n  path = \"s3://my-bucket/alloy-config/targets.json\"\n  \n  poll_frequency = \"5m\"\n  \n  // AWS credentials (can also use IAM role)\n  // access_key = \"AKIAIOSFODNN7EXAMPLE\"\n  // secret_key = \"wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY\"\n}\n\nprometheus.scrape \"s3_targets\" {\n  targets    = json_decode(remote.s3.config.content)\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "k8s-configmap-config",
+      "title": "Configuration from Kubernetes ConfigMap (Self-Hosted)",
+      "category": "discovery",
+      "description": "Load dynamic configuration from Kubernetes ConfigMaps for self-hosted Mimir",
+      "difficulty": "intermediate",
+      "tags": ["kubernetes", "configmap", "remote-config", "oss", "self-hosted"],
+      "signals": ["metrics"],
+      "configuration": "// Read targets from ConfigMap\nremote.kubernetes.configmap \"targets\" {\n  namespace = \"monitoring\"\n  name      = \"scrape-targets\"\n  key       = \"targets.json\"\n}\n\nprometheus.scrape \"configmap_targets\" {\n  targets    = json_decode(remote.kubernetes.configmap.targets.content)\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"http://mimir:9009/api/v1/push\"\n    \n    // Optional: basic auth for secured Mimir\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "k8s-configmap-config-cloud",
+      "title": "Configuration from Kubernetes ConfigMap (Grafana Cloud)",
+      "category": "discovery",
+      "description": "Load dynamic configuration from Kubernetes ConfigMaps for Grafana Cloud",
+      "difficulty": "intermediate",
+      "tags": ["kubernetes", "configmap", "remote-config", "grafana-cloud"],
+      "signals": ["metrics"],
+      "configuration": "// Read targets from ConfigMap\nremote.kubernetes.configmap \"targets\" {\n  namespace = \"monitoring\"\n  name      = \"scrape-targets\"\n  key       = \"targets.json\"\n}\n\nprometheus.scrape \"configmap_targets\" {\n  targets    = json_decode(remote.kubernetes.configmap.targets.content)\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "prometheus-federation",
+      "title": "Prometheus Federation (Self-Hosted)",
+      "category": "monitoring",
+      "description": "Federate metrics from multiple Prometheus servers for self-hosted Mimir",
+      "difficulty": "intermediate",
+      "tags": ["prometheus", "federation", "metrics", "oss", "self-hosted"],
+      "signals": ["metrics"],
+      "configuration": "// Scrape federated metrics from Prometheus\nprometheus.scrape \"federation\" {\n  targets = [{\n    __address__ = \"prometheus-1:9090\",\n    cluster     = \"cluster-1\",\n  }, {\n    __address__ = \"prometheus-2:9090\",\n    cluster     = \"cluster-2\",\n  }]\n  \n  metrics_path = \"/federate\"\n  \n  params = {\n    \"match[]\" = [\n      '{job=\"kubernetes-pods\"}',\n      '{job=\"kubernetes-nodes\"}',\n      '{__name__=~\".*:.*\"}',\n    ]\n  }\n  \n  honor_labels = true\n  \n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"http://mimir:9009/api/v1/push\"\n    \n    // Optional: basic auth for secured Mimir\n    // basic_auth {\n    //   username = \"your-username\"\n    //   password = \"your-password\"\n    // }\n  }\n}"
+    },
+    {
+      "id": "prometheus-federation-cloud",
+      "title": "Prometheus Federation (Grafana Cloud)",
+      "category": "monitoring",
+      "description": "Federate metrics from multiple Prometheus servers for Grafana Cloud",
+      "difficulty": "intermediate",
+      "tags": ["prometheus", "federation", "metrics", "grafana-cloud"],
+      "signals": ["metrics"],
+      "configuration": "// Scrape federated metrics from Prometheus\nprometheus.scrape \"federation\" {\n  targets = [{\n    __address__ = \"prometheus-1:9090\",\n    cluster     = \"cluster-1\",\n  }, {\n    __address__ = \"prometheus-2:9090\",\n    cluster     = \"cluster-2\",\n  }]\n  \n  metrics_path = \"/federate\"\n  \n  params = {\n    \"match[]\" = [\n      '{job=\"kubernetes-pods\"}',\n      '{job=\"kubernetes-nodes\"}',\n      '{__name__=~\".*:.*\"}',\n    ]\n  }\n  \n  honor_labels = true\n  \n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n    basic_auth {\n      username = \"your-username\"\n      password = \"your-api-key\"\n    }\n  }\n}"
+    },
+    {
+      "id": "metrics-relabeling-advanced",
+      "title": "Advanced Metrics Relabeling",
+      "category": "monitoring",
+      "description": "Complex relabeling rules for metrics with filtering and transformation",
+      "difficulty": "advanced",
+      "tags": ["prometheus", "relabeling", "metrics", "filtering"],
+      "signals": ["metrics"],
+      "configuration": "prometheus.scrape \"apps\" {\n  targets = [{\n    __address__ = \"app-1:8080\",\n    env         = \"production\",\n    team        = \"backend\",\n  }]\n  \n  forward_to = [prometheus.relabel.advanced.receiver]\n}\n\nprometheus.relabel \"advanced\" {\n  forward_to = [prometheus.remote_write.default.receiver]\n  \n  // Drop metrics matching pattern\n  rule {\n    source_labels = [\"__name__\"]\n    regex         = \"go_.*\"\n    action        = \"drop\"\n  }\n  \n  // Keep only specific metrics\n  rule {\n    source_labels = [\"__name__\"]\n    regex         = \"(http_requests_total|http_request_duration_seconds).*\"\n    action        = \"keep\"\n  }\n  \n  // Add custom label\n  rule {\n    target_label = \"monitoring_source\"\n    replacement  = \"alloy\"\n  }\n  \n  // Rename label\n  rule {\n    source_labels = [\"env\"]\n    target_label  = \"environment\"\n  }\n  \n  // Combine labels\n  rule {\n    source_labels = [\"env\", \"team\"]\n    separator     = \"-\"\n    target_label  = \"env_team\"\n  }\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n  }\n}"
+    },
+    {
+      "id": "logs-parsing-json",
+      "title": "JSON Log Parsing and Processing",
+      "category": "logging",
+      "description": "Parse JSON logs with field extraction and label creation",
+      "difficulty": "intermediate",
+      "tags": ["logs", "json", "parsing", "loki"],
+      "signals": ["logs"],
+      "configuration": "local.file_match \"json_logs\" {\n  path_targets = [{\n    __address__ = \"localhost\",\n    __path__    = \"/var/log/app/*.json\",\n    app         = \"myapp\",\n  }]\n}\n\nloki.source.file \"json_app\" {\n  targets    = local.file_match.json_logs.targets\n  forward_to = [loki.process.json_parser.receiver]\n}\n\nloki.process \"json_parser\" {\n  // Parse JSON\n  stage.json {\n    expressions = {\n      timestamp  = \"timestamp\",\n      level      = \"level\",\n      message    = \"message\",\n      trace_id   = \"trace_id\",\n      span_id    = \"span_id\",\n      user_id    = \"user_id\",\n      request_id = \"request_id\",\n    }\n  }\n  \n  // Use timestamp from log\n  stage.timestamp {\n    source = \"timestamp\"\n    format = \"RFC3339\"\n  }\n  \n  // Extract labels\n  stage.labels {\n    values = {\n      level      = \"\",\n      trace_id   = \"\",\n    }\n  }\n  \n  // Drop debug logs in production\n  stage.match {\n    selector = '{level=\"debug\"}'\n    action   = \"drop\"\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}\n\nloki.write \"default\" {\n  endpoint {\n    url = \"https://logs-prod-01.grafana.net/loki/api/v1/push\"\n  }\n}"
+    },
+    {
+      "id": "multi-tenant-routing",
+      "title": "Multi-tenant Metrics and Logs Routing",
+      "category": "monitoring",
+      "description": "Route metrics and logs to different backends based on tenant labels",
+      "difficulty": "advanced",
+      "tags": ["multi-tenant", "routing", "metrics", "logs"],
+      "signals": ["metrics", "logs"],
+      "configuration": "// Discover pods with tenant labels\ndiscovery.kubernetes \"pods\" {\n  role = \"pod\"\n}\n\n// Scrape metrics\nprometheus.scrape \"multi_tenant\" {\n  targets    = discovery.kubernetes.pods.targets\n  forward_to = [prometheus.relabel.tenant_router.receiver]\n}\n\n// Route metrics by tenant\nprometheus.relabel \"tenant_router\" {\n  forward_to = [\n    prometheus.remote_write.tenant_a.receiver,\n    prometheus.remote_write.tenant_b.receiver,\n  ]\n  \n  rule {\n    source_labels = [\"__meta_kubernetes_namespace\"]\n    target_label  = \"tenant\"\n  }\n}\n\n// Tenant A endpoint\nprometheus.remote_write \"tenant_a\" {\n  endpoint {\n    url = \"https://tenant-a.grafana.net/api/prom/push\"\n    headers = {\n      \"X-Scope-OrgID\" = \"tenant-a\",\n    }\n  }\n}\n\n// Tenant B endpoint\nprometheus.remote_write \"tenant_b\" {\n  endpoint {\n    url = \"https://tenant-b.grafana.net/api/prom/push\"\n    headers = {\n      \"X-Scope-OrgID\" = \"tenant-b\",\n    }\n  }\n}\n\n// Logs routing\nloki.source.kubernetes \"pods\" {\n  targets    = discovery.kubernetes.pods.targets\n  forward_to = [loki.process.tenant_router.receiver]\n}\n\nloki.process \"tenant_router\" {\n  stage.labels {\n    values = {\n      tenant = \"__meta_kubernetes_namespace\",\n    }\n  }\n  \n  forward_to = [\n    loki.write.tenant_a.receiver,\n    loki.write.tenant_b.receiver,\n  ]\n}\n\nloki.write \"tenant_a\" {\n  endpoint {\n    url = \"https://tenant-a.grafana.net/loki/api/v1/push\"\n    headers = {\n      \"X-Scope-OrgID\" = \"tenant-a\",\n    }\n  }\n}\n\nloki.write \"tenant_b\" {\n  endpoint {\n    url = \"https://tenant-b.grafana.net/loki/api/v1/push\"\n    headers = {\n      \"X-Scope-OrgID\" = \"tenant-b\",\n    }\n  }\n}"
+    },
+    {
+      "id": "metrics-aggregation-local",
+      "title": "Local Metrics Aggregation",
+      "category": "monitoring",
+      "description": "Aggregate high-cardinality metrics locally before remote write",
+      "difficulty": "advanced",
+      "tags": ["metrics", "aggregation", "cardinality", "prometheus"],
+      "signals": ["metrics"],
+      "configuration": "prometheus.scrape \"high_cardinality\" {\n  targets = [{\n    __address__ = \"app:8080\",\n  }]\n  \n  forward_to = [prometheus.relabel.aggregate.receiver]\n}\n\n// Aggregate metrics to reduce cardinality\nprometheus.relabel \"aggregate\" {\n  forward_to = [prometheus.remote_write.default.receiver]\n  \n  // Drop high-cardinality labels\n  rule {\n    regex  = \"user_id|session_id|trace_id\"\n    action = \"labeldrop\"\n  }\n  \n  // Keep only essential labels\n  rule {\n    source_labels = [\"__name__\"]\n    regex         = \"http_requests_total\"\n    action        = \"keep\"\n  }\n  \n  // Aggregate by status code groups (2xx, 3xx, 4xx, 5xx)\n  rule {\n    source_labels = [\"status_code\"]\n    regex         = \"(2|3|4|5).*\"\n    target_label  = \"status_class\"\n    replacement   = \"${1}xx\"\n  }\n  \n  rule {\n    regex  = \"status_code\"\n    action = \"labeldrop\"\n  }\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n  }\n  \n  // Queue config for handling bursts\n  queue_config {\n    capacity          = 10000\n    max_shards        = 50\n    min_shards        = 1\n    max_samples_per_send = 5000\n    batch_send_deadline  = \"5s\"\n  }\n}"
+    },
+    {
+      "id": "trace-metrics-generation",
+      "title": "Generate Metrics from Traces",
+      "category": "tracing",
+      "description": "Convert trace spans into metrics for SLO monitoring and alerting",
+      "difficulty": "advanced",
+      "tags": ["traces", "metrics", "span-metrics", "slo"],
+      "signals": ["traces", "metrics"],
+      "configuration": "// Receive OTLP traces\notelcol.receiver.otlp \"default\" {\n  grpc {\n    endpoint = \"0.0.0.0:4317\"\n  }\n  http {\n    endpoint = \"0.0.0.0:4318\"\n  }\n  output {\n    traces = [otelcol.connector.spanmetrics.default.input]\n  }\n}\n\n// Generate metrics from spans\notelcol.connector.spanmetrics \"default\" {\n  histogram {\n    explicit {\n      buckets = [0.01, 0.05, 0.1, 0.5, 1.0, 5.0, 10.0]\n    }\n  }\n  \n  dimensions {\n    name = \"http.method\"\n  }\n  dimensions {\n    name = \"http.status_code\"\n  }\n  dimensions {\n    name = \"service.name\"\n  }\n  \n  output {\n    traces  = [otelcol.exporter.otlp.tempo.input]\n    metrics = [otelcol.exporter.prometheus.default.input]\n  }\n}\n\n// Export traces to Tempo\notelcol.exporter.otlp \"tempo\" {\n  client {\n    endpoint = \"https://tempo-prod-01.grafana.net:443\"\n  }\n}\n\n// Export generated metrics to Prometheus\notelcol.exporter.prometheus \"default\" {\n  forward_to = [prometheus.remote_write.default.receiver]\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n  }\n}"
+    },
+    {
+      "id": "blackbox-monitoring",
+      "title": "Blackbox Endpoint Monitoring",
+      "category": "monitoring",
+      "description": "Monitor HTTP/HTTPS endpoints with blackbox_exporter for availability and latency",
+      "difficulty": "beginner",
+      "tags": ["blackbox", "http", "monitoring", "uptime"],
+      "signals": ["metrics"],
+      "configuration": "// Blackbox exporter for HTTP probes\nprometheus.exporter.blackbox \"http_probes\" {\n  config = \"\"\"\nmodules:\n  http_2xx:\n    prober: http\n    timeout: 5s\n    http:\n      preferred_ip_protocol: ip4\n      valid_status_codes: [200, 201, 202]\n      method: GET\n      fail_if_ssl: false\n      fail_if_not_ssl: false\n  https_2xx:\n    prober: http\n    timeout: 5s\n    http:\n      preferred_ip_protocol: ip4\n      valid_status_codes: [200]\n      method: GET\n      fail_if_not_ssl: true\n      tls_config:\n        insecure_skip_verify: false\n\"\"\"\n  \n  targets = [{\n    name   = \"example-http\",\n    target = \"http://example.com\",\n    module = \"http_2xx\",\n  }, {\n    name   = \"example-https\",\n    target = \"https://example.com\",\n    module = \"https_2xx\",\n  }]\n}\n\nprometheus.scrape \"blackbox\" {\n  targets    = prometheus.exporter.blackbox.http_probes.targets\n  forward_to = [prometheus.remote_write.default.receiver]\n  scrape_interval = \"30s\"\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n  }\n}"
+    },
+    {
+      "id": "k8s-events-to-loki",
+      "title": "Kubernetes Events to Loki",
+      "category": "logging",
+      "description": "Collect and forward Kubernetes cluster events to Loki for debugging",
+      "difficulty": "beginner",
+      "tags": ["kubernetes", "events", "logs", "loki"],
+      "signals": ["logs"],
+      "configuration": "// Collect Kubernetes events\nloki.source.kubernetes_events \"cluster\" {\n  namespaces = []  // Empty means all namespaces\n  \n  forward_to = [loki.process.events.receiver]\n  \n  // Optional: filter by event types\n  // event_types = [\"Warning\", \"Error\"]\n}\n\nloki.process \"events\" {\n  stage.json {\n    expressions = {\n      namespace = \"metadata.namespace\",\n      name      = \"metadata.name\",\n      reason    = \"reason\",\n      message   = \"message\",\n      type      = \"type\",\n      kind      = \"involvedObject.kind\",\n      object    = \"involvedObject.name\",\n    }\n  }\n  \n  stage.labels {\n    values = {\n      namespace = \"\",\n      reason    = \"\",\n      type      = \"\",\n      kind      = \"\",\n    }\n  }\n  \n  forward_to = [loki.write.default.receiver]\n}\n\nloki.write \"default\" {\n  endpoint {\n    url = \"https://logs-prod-01.grafana.net/loki/api/v1/push\"\n  }\n}"
+    },
+    {
+      "id": "nginx-logs-prometheus",
+      "title": "Nginx Access Log Metrics",
+      "category": "monitoring",
+      "description": "Parse Nginx access logs and generate Prometheus metrics",
+      "difficulty": "intermediate",
+      "tags": ["nginx", "logs", "metrics", "parser"],
+      "signals": ["metrics", "logs"],
+      "configuration": "// Read Nginx access logs\nlocal.file_match \"nginx\" {\n  path_targets = [{\n    __address__ = \"localhost\",\n    __path__    = \"/var/log/nginx/access.log\",\n  }]\n}\n\nloki.source.file \"nginx\" {\n  targets    = local.file_match.nginx.targets\n  forward_to = [loki.process.nginx.receiver]\n}\n\n// Parse and create metrics\nloki.process \"nginx\" {\n  // Parse log format\n  stage.regex {\n    expression = '(?P<ip>[\\\\w\\\\.]+) - (?P<user>[\\\\w]+|-) \\\\[(?P<timestamp>.+)\\\\] \"(?P<method>\\\\w+) (?P<path>\\\\S+) (?P<protocol>\\\\S+)\" (?P<status>\\\\d{3}) (?P<bytes>\\\\d+|-) \"(?P<referrer>[^\"]*)\" \"(?P<agent>[^\"]*)\"'\n  }\n  \n  // Create metrics\n  stage.metrics {\n    metric.counter {\n      name        = \"nginx_requests_total\"\n      description = \"Total HTTP requests\"\n      source      = \"status\"\n      \n      labels = {\n        method = \"\",\n        status = \"\",\n      }\n    }\n    \n    metric.histogram {\n      name        = \"nginx_response_size_bytes\"\n      description = \"Response size distribution\"\n      source      = \"bytes\"\n      \n      labels = {\n        method = \"\",\n        status = \"\",\n      }\n      \n      buckets = [100, 1000, 10000, 100000, 1000000]\n    }\n  }\n  \n  forward_to = [\n    loki.write.default.receiver,\n    prometheus.remote_write.default.receiver,\n  ]\n}\n\nloki.write \"default\" {\n  endpoint {\n    url = \"https://logs-prod-01.grafana.net/loki/api/v1/push\"\n  }\n}\n\nprometheus.remote_write \"default\" {\n  endpoint {\n    url = \"https://prometheus-prod-01.grafana.net/api/prom/push\"\n  }\n}"
+    }
+  ]
+}
