@@ -1,6 +1,15 @@
 # Alloy Studio
 
+[![Deploy Frontend](https://github.com/simplyzee/alloy-studio/actions/workflows/deploy.yml/badge.svg)](https://github.com/simplyzee/alloy-studio/actions/workflows/deploy.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 **Alloy Studio** is an open-source web application that helps engineers generate, validate, and understand Grafana Alloy configuration files. This tool simplifies the creation of observability pipelines by providing guided builders, validation, and comprehensive recipe templates.
+
+<div align="center">
+
+[![Launch Alloy Studio](https://img.shields.io/badge/🚀_Launch_Alloy_Studio-FF6B35?style=for-the-badge&logoColor=white)](http://alloy-studio.simplyzee.dev/)
+
+</div>
 
 ![Alloy Studio Screenshot](docs/screenshots/hero.png)
 
