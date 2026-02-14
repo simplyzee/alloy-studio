@@ -16,10 +16,10 @@
 ## ✨ Features
 
 - **🎨 Dual Modes**: Switch between Guided Builder and Raw Editor
-- **✅ Real-time Validation**: Validate configurations using the official Alloy CLI *Planned*
+- **✅ Real-time Validation**: Validate configurations using the official Alloy CLI **Planned**
 - **🎯 150+ Components**: Support for all Grafana Alloy components across 11 categories
 - **📚 Recipe Library**: 30+ pre-built recipes for common observability patterns
-- **💡 IntelliSense**: Smart autocomplete and syntax highlighting *Improvement Planned*
+- **💡 IntelliSense**: Smart autocomplete and syntax highlighting **Improvement Planned**
 - **🎭 Dark Mode**: Beautiful dark theme by default
 - **📦 Export Ready**: Download production-ready `.alloy` configuration files
 
